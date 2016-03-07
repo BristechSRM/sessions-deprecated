@@ -10,7 +10,7 @@ Target "Clean" (fun _ ->
 )
 
 Target "BuildApp" (fun _ ->
-    !! "OwinCross/**/*.fsproj"
+    !! "Speakers/**/*.fsproj"
     |> MSBuildRelease buildDir "Build"
     |> Log "AppBuld-Output: "
 )
