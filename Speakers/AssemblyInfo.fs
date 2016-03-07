@@ -1,9 +1,9 @@
-﻿module OwinCross.AssemblyInfo
+﻿module Speakers.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices
 
-[<assembly:AssemblyTitle("OwinCross")>]
+[<assembly:AssemblyTitle("Speakers")>]
 [<assembly:AssemblyDescription("")>]
 [<assembly:AssemblyConfiguration("")>]
 [<assembly:AssemblyCompany("")>]
