@@ -1,5 +1,15 @@
 ﻿namespace Speakers.Models
 
+open System
+
+type Rating =
+    | Zero = 0
+    | One = 1
+    | Two = 2
+    | Three = 3
+    | Four = 4
+    | Five = 5
+
 type SpeakerStatus =
     | Unassigned = 0
     | Assigned = 1
@@ -11,10 +21,10 @@ type SpeakerStatus =
 type Speaker = {
     Name : string
     Title : string
-    Rating: int
+    Rating: Rating
     Admin: string
     AdminImageUrl: string
-    LastContacted: string
+    LastContacted: DateTime
     SpeakerStatus: SpeakerStatus
 }
 
