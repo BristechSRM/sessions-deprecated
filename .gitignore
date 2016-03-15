@@ -249,3 +249,6 @@ build/output/
 
 # Ubuntu trash folder
 .Trash-*
+
+# This file needs to have the parameters required by the pipeline
+concourse/credentials.yml
