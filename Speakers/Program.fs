@@ -13,6 +13,8 @@ open Speakers.Startup
     netsh http ad urlacl url=http://*:9000/ user=username
 
     After running this command, you won't need to run visual studio as administrator again.
+
+    Reference : http://stackoverflow.com/questions/27842979/owin-webapp-start-gives-a-first-chance-exception-of-type-system-reflection-targ 
 *)
 [<EntryPoint>]
 let main _ =
