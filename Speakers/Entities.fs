@@ -22,6 +22,7 @@ type TalkStatus =
 
 type Speaker = {
     Name : string
+    Email : string
     Rating : Rating
     LastContacted : DateTime
 }
@@ -48,6 +49,7 @@ module Helpers =
                     Status = TalkStatus.Assigned
                     Speaker = 
                         { Name = "Thomas Hull"
+                          Email = "bob.builder@cartoonconstructionslimited.tv"
                           Rating = Rating.Zero
                           LastContacted = DateTime(1970, 1, 1) }
                     Admin = 
@@ -58,6 +60,7 @@ module Helpers =
                     Status = TalkStatus.Deferred
                     Speaker = 
                         { Name = "Jason Ebbin"
+                          Email = "jason@jason.com"
                           Rating = Rating.Five
                           LastContacted = DateTime(1989, 11, 09) }
                     Admin = 
@@ -68,6 +71,7 @@ module Helpers =
                     Status = TalkStatus.TopicApproved
                     Speaker = 
                         { Name = "David Wybourn"
+                          Email = "david.wybourn@superawesomegoodcode.co.uk"
                           Rating = Rating.Three
                           LastContacted = DateTime(2015, 10, 21) }
                     Admin = 
@@ -78,6 +82,7 @@ module Helpers =
                     Status = TalkStatus.InProgress
                     Speaker = 
                         { Name = "Joe Bloggs"
+                          Email = "joe@bloggs.com"
                           Rating = Rating.Two
                           LastContacted = DateTime(2016, 02, 19) }
                     Admin = 
@@ -88,6 +93,7 @@ module Helpers =
                     Status = TalkStatus.DateAssigned
                     Speaker = 
                         { Name = "Chris Smith"
+                          Email = "chris.smith@leaddeveloper.com"
                           Rating = Rating.Four
                           LastContacted = DateTime(2016, 01, 10) }
                     Admin = 

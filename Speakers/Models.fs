@@ -8,6 +8,7 @@ type TalkOutline = {
     Title : string
     Status: TalkStatus
     SpeakerName : string
+    SpeakerEmail : string
     SpeakerRating: Rating
     SpeakerLastContacted: DateTime
     AdminName: string
@@ -22,6 +23,7 @@ module Helpers =
             Title = talk.Title
             Status = talk.Status
             SpeakerName = talk.Speaker.Name
+            SpeakerEmail = talk.Speaker.Email
             SpeakerRating = talk.Speaker.Rating
             SpeakerLastContacted = talk.Speaker.LastContacted
             AdminName = talk.Admin.Name
