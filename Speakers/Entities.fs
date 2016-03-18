@@ -2,6 +2,8 @@
 
 open System
 
+type TalkId = int
+
 type Rating =
     | Zero = 0
     | One = 1
@@ -30,6 +32,7 @@ type Admin = {
 }
 
 type Talk = {
+    Id : TalkId
     Title : string
     Status : TalkStatus
     Speaker : Speaker
@@ -40,7 +43,8 @@ type Talk = {
 module Helpers = 
     let exampleTalks = 
         seq { 
-            yield { Title = "To know javascript is to love javascript"
+            yield { Id = 1
+                    Title = "To know javascript is to love javascript"
                     Status = TalkStatus.Assigned
                     Speaker = 
                         { Name = "Thomas Hull"
@@ -49,7 +53,8 @@ module Helpers =
                     Admin = 
                         { Name = "David Wybourn"
                           ImageUrl = "https://placebear.com/50/50" } }
-            yield { Title = "F#: The sharpest tool in the shed"
+            yield { Id = 2
+                    Title = "F#: The sharpest tool in the shed"
                     Status = TalkStatus.Deferred
                     Speaker = 
                         { Name = "Jason Ebbin"
@@ -58,7 +63,8 @@ module Helpers =
                     Admin = 
                         { Name = "Jason Ebbin"
                           ImageUrl = "https://placebear.com/50/50" } }
-            yield { Title = "Concourse: Where I met myself"
+            yield { Id = 3
+                    Title = "Concourse: Where I met myself"
                     Status = TalkStatus.TopicApproved
                     Speaker = 
                         { Name = "David Wybourn"
@@ -67,7 +73,8 @@ module Helpers =
                     Admin = 
                         { Name = "Chris James Smith"
                           ImageUrl = "https://placebear.com/50/50" } }
-            yield { Title = ""
+            yield { Id = 4
+                    Title = ""
                     Status = TalkStatus.InProgress
                     Speaker = 
                         { Name = "Joe Bloggs"
@@ -76,7 +83,8 @@ module Helpers =
                     Admin = 
                         { Name = "Thomas Hull"
                           ImageUrl = "https://placebear.com/50/50" } }
-            yield { Title = "C# or F#: Which is sharper?"
+            yield { Id = 5
+                    Title = "C# or F#: Which is sharper?"
                     Status = TalkStatus.DateAssigned
                     Speaker = 
                         { Name = "Chris Smith"

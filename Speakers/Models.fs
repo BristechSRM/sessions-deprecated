@@ -4,6 +4,7 @@ open System
 open Speakers.Entities
 
 type TalkOutline = {
+    TalkId : TalkId
     Title : string
     Status: TalkStatus
     SpeakerName : string
@@ -17,13 +18,14 @@ type TalkOutline = {
 module Helpers = 
     let createTalkOutline (talk : Talk) = 
         {
-            SpeakerName = talk.Speaker.Name
+            TalkId = talk.Id
             Title = talk.Title
-            SpeakerRating = talk.Speaker.Rating
-            AdminName = talk.Admin.Name
-            AdminImageUrl = talk.Admin.ImageUrl
-            SpeakerLastContacted = talk.Speaker.LastContacted
             Status = talk.Status
+            SpeakerName = talk.Speaker.Name
+            SpeakerRating = talk.Speaker.Rating
+            SpeakerLastContacted = talk.Speaker.LastContacted
+            AdminName = talk.Admin.Name
+            AdminImageUrl = talk.Admin.ImageUrl    
         }
 
     let exampleTalkOutlines = 
