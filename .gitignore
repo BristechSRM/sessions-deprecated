@@ -249,3 +249,6 @@ build/output/
 
 # Ubuntu trash folder
 .Trash-*
+
+#app.config containing connection string
+Speakers/app.config
