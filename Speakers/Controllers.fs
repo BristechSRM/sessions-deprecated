@@ -22,12 +22,3 @@ type SpeakersController() =
         match speaker with
         | Some speaker -> x.Request.CreateResponse(speaker)
         | None -> x.Request.CreateResponse(HttpStatusCode.NotFound)
-
-    member x.Post([<FromBody>] speaker: Speaker) =
-        printfn "Received POST request for new speaker"
-        let newSpeaker = createSpeaker speaker
-        let newUrl = Uri(x.Request.RequestUri.AbsoluteUri + newSpeaker.Id.ToString())
-        printfn "Speaker created with id %d" newSpeaker.Id
-        let response = x.Request.CreateResponse(HttpStatusCode.Created, newSpeaker.Id)
-        response.Headers.Location <- newUrl
-        response

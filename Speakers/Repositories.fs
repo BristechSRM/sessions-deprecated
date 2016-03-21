@@ -43,14 +43,4 @@ let getSpeaker index =
     else
         let speaker = entityToSpeaker (Seq.head speakers)
         Some speaker
-  
-let createSpeaker (speaker: Speaker) =
-    let newSpeaker = ctx.Talks.SpeakersOld.Create()
-    newSpeaker.Name <- speaker.Name
-    newSpeaker.Title <- speaker.Title
-    newSpeaker.Rating <- (uint32) speaker.Rating
-    newSpeaker.Admin <- speaker.Admin
-    newSpeaker.AdminImageUrl <- speaker.AdminImageUrl
-    newSpeaker.SpeakerStatus <- (uint32) speaker.SpeakerStatus
-    ctx.SubmitUpdates()
-    newSpeaker
+ 
