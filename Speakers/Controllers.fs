@@ -1,18 +1,33 @@
 ﻿namespace Speakers.Controllers
 
 open System
+open System.Net
+open System.Net.Http
 open System.Web.Http
-open Speakers.Models 
+open Speakers.Models
+open Speakers.Repositories
+
 
 type SpeakersController() =
     inherit ApiController()
 
     member x.Get() =
-        printfn "Received Get Request for Speakers"
-        seq {
-            yield {Name = "Thomas Hull"; Title = "To know javascript is to love javascript"; Rating=Rating.Five; Admin="David Wybourn"; AdminImageUrl="https://placebear.com/50/50"; LastContacted=DateTime(1970,1,1); SpeakerStatus = SpeakerStatus.Assigned }
-            yield {Name = "Jason Ebbin";   Title = "F#: The sharpest tool in the shed"; Rating=Rating.Five; Admin="Jason Ebbin"; AdminImageUrl="https://placebear.com/50/50"; LastContacted=DateTime(1989,11,09); SpeakerStatus = SpeakerStatus.Deferred }
-            yield {Name = "David Wybourn"; Title = "Concourse: Where I met myself"; Rating=Rating.Three; Admin="Chris James Smith"; AdminImageUrl="https://placebear.com/50/50"; LastContacted=DateTime(2015,10,21); SpeakerStatus = SpeakerStatus.TopicApproved }
-            yield {Name = "Joe Bloggs"; Title = ""; Rating=Rating.Zero; Admin="Thomas Hull"; AdminImageUrl="https://placebear.com/50/50"; LastContacted=DateTime(2016,02,19); SpeakerStatus = SpeakerStatus.InProgress }
-            yield {Name = "Chris Smith"; Title = "C# or F#: Which is sharper?"; Rating=Rating.One; Admin="Thomas Hull"; AdminImageUrl="https://placebear.com/50/50"; LastContacted=DateTime(2016,01,10); SpeakerStatus = SpeakerStatus.DateAssigned }
-        }
+        printfn "Received GET request for speakers"
+        let speakers = getAllSpeakers
+        x.Request.CreateResponse(speakers)
+
+    member x.Get(id:int) =
+        printfn "Received GET request for speaker with id %d" id
+        let speaker = getSpeaker id
+        match speaker with
+        | Some speaker -> x.Request.CreateResponse(speaker)
+        | None -> x.Request.CreateResponse(HttpStatusCode.NotFound)
+
+    member x.Post([<FromBody>] speaker: Speaker) =
+        printfn "Received POST request for new speaker"
+        let newSpeaker = createSpeaker speaker
+        let newUrl = Uri(x.Request.RequestUri.AbsoluteUri + newSpeaker.Id.ToString())
+        printfn "Speaker created with id %d" newSpeaker.Id
+        let response = x.Request.CreateResponse(HttpStatusCode.Created, newSpeaker.Id)
+        response.Headers.Location <- newUrl
+        response
