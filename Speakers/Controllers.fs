@@ -10,3 +10,9 @@ type TalkOutlinesController() =
     member x.Get() =
         printfn "Received Get Request for Talk Outlines"
         exampleTalkOutlines
+
+type TestController() = 
+    inherit ApiController()
+
+    member x.Get() =
+        "Test Return for multiple controllers!"
