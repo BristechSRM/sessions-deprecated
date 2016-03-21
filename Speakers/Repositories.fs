@@ -3,13 +3,17 @@
 open System
 open FSharp.Data.Sql
 open Speakers.Models
+open System.Configuration
 
 type Sdp = SqlDataProvider<
                 ConnectionStringName="DefaultConnection",
                 DatabaseVendor = Common.DatabaseProviderTypes.MYSQL,
                 Owner = "talks"
             >
-let ctx = Sdp.GetDataContext()
+
+let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
+
+let ctx = Sdp.GetDataContext(connectionString)
 
 let entityToSpeaker (entity: Sdp.dataContext.``talks.speakers_oldEntity``) =
     {
