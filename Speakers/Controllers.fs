@@ -1,17 +1,22 @@
 ﻿namespace Speakers.Controllers
 
+open System.Net
+open System.Net.Http
 open System.Web.Http
-open Speakers.Models
+open Speakers.Repositories
+
 
 type TalkOutlinesController() =
     inherit ApiController()
 
-    member __.Get() =
-        printfn "Received Get Request for Talk Outlines"
-        exampleTalkOutlines
+    member x.Get() =
+        printfn "Received GET request for talk outlines"
+        let talkOutlines = getAllTalkOutlines
+        x.Request.CreateResponse(talkOutlines)
 
-type TestController() = 
-    inherit ApiController()
-
-    member __.Get() =
-        "Test Return for multiple controllers!"
+    member x.Get(id:int) =
+        printfn "Received GET request for talk outline with talk id %d" id
+        let talkOutline = getTalkOutline id
+        match talkOutline with
+        | Some talkOutline -> x.Request.CreateResponse(talkOutline)
+        | None -> x.Request.CreateResponse(HttpStatusCode.NotFound)
