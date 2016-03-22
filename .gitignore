@@ -229,6 +229,9 @@ FakesAssemblies/
 **/*.Server/ModelManifest.xml
 _Pvt_Extensions
 
+# Visual Studio FSharpLint
+Settings.FSharpLint
+
 # Paket dependency manager
 .paket/paket.exe
 
@@ -250,8 +253,8 @@ build/output/
 # Ubuntu trash folder
 .Trash-*
 
-#app.config containing connection string
-Speakers/app.config
+#connections.config containing connection string
+Speakers/connections.config
 
 # This file needs to have the parameters required by the pipeline
 concourse/credentials.yml

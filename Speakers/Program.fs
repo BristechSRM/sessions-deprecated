@@ -2,7 +2,7 @@ module Program
 
 open Microsoft.Owin.Hosting
 open System.Threading
-open Speakers.Startup 
+open Speakers.Startup
 
 (*
     Note: When running this app from Visual studio / On Windows / Possibly with mono develop (Not checked)
@@ -27,6 +27,7 @@ let main _ =
         It starts running then returns to our code, meaning our program will exit. 
         This code will wait indefinitely for a signal so that the overall project will continue to run.
     *)
+    
     let waitIndefinitelyWithToken = 
         let cancelSource = new CancellationTokenSource()
         cancelSource.Token.WaitHandle.WaitOne() |> ignore
