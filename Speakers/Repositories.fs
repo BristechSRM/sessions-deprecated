@@ -15,32 +15,42 @@ let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConne
 
 let ctx = Sdp.GetDataContext(connectionString)
 
-let entityToSpeaker (entity: Sdp.dataContext.``talks.speakers_oldEntity``) =
+let entityToTalkOutline (talkEntity: Sdp.dataContext.``talks.talksEntity``, speakerEntity: Sdp.dataContext.``talks.speakersEntity``, adminEntity: Sdp.dataContext.``talks.adminsEntity``) =
     {
-        Name = entity.Name;
-        Title = entity.Title;
-        Rating = enum<Rating>((int)entity.Rating);
-        Admin = entity.Admin;
-        AdminImageUrl = entity.AdminImageUrl;
-        LastContacted = DateTime.Now;
-        SpeakerStatus = enum<SpeakerStatus>((int)entity.SpeakerStatus)
+        TalkId = (int)talkEntity.Id;
+        Title = talkEntity.Title;
+        Status = enum<TalkStatus>((int)talkEntity.Status);
+        SpeakerName = speakerEntity.Name;
+        SpeakerEmail = speakerEntity.Email;
+        SpeakerRating = enum<Rating>((int)speakerEntity.Rating);
+        SpeakerLastContacted = DateTime.Now;
+        AdminName = adminEntity.Name;
+        AdminImageUrl = adminEntity.ImageUrl;
     }
 
-let getAllSpeakers =
+let getAllTalkOutlines =
     query {
-        for s in ctx.Talks.SpeakersOld do
-        select s
-    } |> Seq.map entityToSpeaker
+        for talk in ctx.Talks.Talks do
+        join speaker in ctx.Talks.Speakers on
+            (talk.SpeakerId = speaker.Id)
+        join admin in ctx.Talks.Admins on
+            (talk.AdminId = admin.Id)
+        select (talk, speaker, admin)
+    } |> Seq.map entityToTalkOutline
 
-let getSpeaker index =
-    let speakers = query {
-        for s in ctx.Talks.SpeakersOld do
-        where (s.Id = (uint32)index)
-        select s
+let getTalkOutline index =
+    let talkOutlines = query {
+        for talk in ctx.Talks.Talks do
+        join speaker in ctx.Talks.Speakers on
+            (talk.SpeakerId = speaker.Id)
+        join admin in ctx.Talks.Admins on
+            (talk.AdminId = admin.Id)
+        where (talk.Id = (uint32)index)
+        select (talk, speaker, admin)
     }
-    if Seq.isEmpty speakers then
+    if Seq.isEmpty talkOutlines then
         None
     else
-        let speaker = entityToSpeaker (Seq.head speakers)
-        Some speaker
+        let talkOutline = entityToTalkOutline (Seq.head talkOutlines)
+        Some talkOutline
  

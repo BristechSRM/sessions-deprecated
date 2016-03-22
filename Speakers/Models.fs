@@ -2,7 +2,7 @@
 
 open System
 
-type Rating =
+type Rating = 
     | Zero = 0
     | One = 1
     | Two = 2
@@ -10,7 +10,7 @@ type Rating =
     | Four = 4
     | Five = 5
 
-type SpeakerStatus =
+type TalkStatus = 
     | Unassigned = 0
     | Assigned = 1
     | InProgress = 2
@@ -18,13 +18,15 @@ type SpeakerStatus =
     | TopicApproved = 4
     | DateAssigned = 5
 
-type Speaker = {
-    Name : string
+type TalkOutline = {
+    TalkId : int
     Title : string
-    Rating: Rating
-    Admin: string
+    Status: TalkStatus
+    SpeakerName : string
+    SpeakerEmail : string
+    SpeakerRating: Rating
+    SpeakerLastContacted: DateTime
+    AdminName: string
     AdminImageUrl: string
-    LastContacted: DateTime
-    SpeakerStatus: SpeakerStatus
 }
 

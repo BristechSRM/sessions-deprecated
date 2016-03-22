@@ -252,3 +252,6 @@ build/output/
 
 #app.config containing connection string
 Speakers/app.config
+
+# This file needs to have the parameters required by the pipeline
+concourse/credentials.yml
