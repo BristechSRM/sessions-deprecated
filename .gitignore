@@ -253,8 +253,5 @@ build/output/
 # Ubuntu trash folder
 .Trash-*
 
-#connections.config containing connection string
-Speakers/connections.config
-
 # This file needs to have the parameters required by the pipeline
 concourse/credentials.yml
