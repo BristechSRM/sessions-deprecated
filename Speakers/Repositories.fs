@@ -29,11 +29,5 @@ let getAllTalkOutlines =
     connection.Query<TalkOutlineEntity>("select * from talk_outlines")
     |> Seq.map entityToTalkOutline
 
-let getTalkOutline index =
-    let talkOutlines = connection.Query<TalkOutlineEntity>("select * from talk_outlines where talkId = " + index.ToString())
-    if Seq.isEmpty talkOutlines then
-        None
-    else
-        let talkOutline = entityToTalkOutline (Seq.head talkOutlines)
-        Some talkOutline
+
 
