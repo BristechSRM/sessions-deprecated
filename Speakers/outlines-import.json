@@ -1,0 +1,362 @@
+[
+  {
+    "TalkId": 0,
+    "Title": "Large scale analysis of online news data",
+    "Status": 1,
+    "SpeakerName": "Saatviga Sudhahar ",
+    "SpeakerEmail": "saatviga.sudhahar@bristol.ac.uk",
+    "SpeakerRating": 0,
+    "AdminName": "Mike Tinning",
+    "AdminImageUrl": "https://trello-avatars.s3.amazonaws.com/f02047b241ad91ec542cba7ea31a8d90/50.png"
+  },
+  {
+    "TalkId": 1,
+    "Title": "",
+    "Status": 1,
+    "SpeakerName": "John Hunt ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 2,
+    "Title": "",
+    "Status": 1,
+    "SpeakerName": "Nicholas Soper ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Mike Tinning",
+    "AdminImageUrl": "https://trello-avatars.s3.amazonaws.com/f02047b241ad91ec542cba7ea31a8d90/50.png"
+  },
+  {
+    "TalkId": 3,
+    "Title": "QA + Test Automation",
+    "Status": 1,
+    "SpeakerName": "Alex Walker ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 4,
+    "Title": "",
+    "Status": 1,
+    "SpeakerName": "Matt Wright ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Mike Tinning",
+    "AdminImageUrl": "https://trello-avatars.s3.amazonaws.com/f02047b241ad91ec542cba7ea31a8d90/50.png"
+  },
+  {
+    "TalkId": 5,
+    "Title": "Octopus deploy?",
+    "Status": 1,
+    "SpeakerName": "Rhys Godfrey ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Mike Tinning",
+    "AdminImageUrl": "https://trello-avatars.s3.amazonaws.com/f02047b241ad91ec542cba7ea31a8d90/50.png"
+  },
+  {
+    "TalkId": 6,
+    "Title": "Citizen Sensing",
+    "Status": 1,
+    "SpeakerName": "Carolyn Hassan ",
+    "SpeakerEmail": "carolyn@kwmc.org.uk",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 7,
+    "Title": "cloud, connectivity, cyber security",
+    "Status": 1,
+    "SpeakerName": "Neil Bolton ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Mike Tinning",
+    "AdminImageUrl": "https://trello-avatars.s3.amazonaws.com/f02047b241ad91ec542cba7ea31a8d90/50.png"
+  },
+  {
+    "TalkId": 8,
+    "Title": "Apache Nutch, StormCrawler",
+    "Status": 1,
+    "SpeakerName": "Julien Nioche ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Stephen Ford",
+    "AdminImageUrl": "https://trello-avatars.s3.amazonaws.com/6f93e51ced847bfcaa9dc2011a62a65b/50.png"
+  },
+  {
+    "TalkId": 9,
+    "Title": "Home Automation",
+    "Status": 1,
+    "SpeakerName": "Simon Kind ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 10,
+    "Title": "Networking, SDN, security, etc.",
+    "Status": 1,
+    "SpeakerName": "Martin White ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 11,
+    "Title": "Go, Ember, AWS",
+    "Status": 1,
+    "SpeakerName": "Joe Jarlett ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Nicholas Hemley",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 12,
+    "Title": "Authentication and Authorization and SSO",
+    "Status": 1,
+    "SpeakerName": "Simon Wickham ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Stephen Ford",
+    "AdminImageUrl": "https://trello-avatars.s3.amazonaws.com/6f93e51ced847bfcaa9dc2011a62a65b/50.png"
+  },
+  {
+    "TalkId": 13,
+    "Title": "Robotics, cyber security, driverless cars",
+    "Status": 1,
+    "SpeakerName": "Adam Drake ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Stephen Ford",
+    "AdminImageUrl": "https://trello-avatars.s3.amazonaws.com/6f93e51ced847bfcaa9dc2011a62a65b/50.png"
+  },
+  {
+    "TalkId": 14,
+    "Title": "Stormpath - identity API",
+    "Status": 1,
+    "SpeakerName": "Chanoch Wiggers ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Stephen Ford",
+    "AdminImageUrl": "https://trello-avatars.s3.amazonaws.com/6f93e51ced847bfcaa9dc2011a62a65b/50.png"
+  },
+  {
+    "TalkId": 15,
+    "Title": "DevOps",
+    "Status": 1,
+    "SpeakerName": "Matthew Macdonald-Wallace ",
+    "SpeakerEmail": "matt@doics.co",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 16,
+    "Title": "Cryptography Group at the University of Bristol",
+    "Status": 1,
+    "SpeakerName": "Susan Thomson ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Nicholas Hemley",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 17,
+    "Title": "DSP, software defined radio",
+    "Status": 1,
+    "SpeakerName": "Tom Kealy ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 18,
+    "Title": "Bristol Is Open - SDN",
+    "Status": 1,
+    "SpeakerName": "Dimitra Simeonidou ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 19,
+    "Title": "This talk is a Monad",
+    "Status": 1,
+    "SpeakerName": "Jason Ebbin ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 20,
+    "Title": "",
+    "Status": 1,
+    "SpeakerName": "Tim Marsh ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Nicholas Hemley",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 21,
+    "Title": "",
+    "Status": 1,
+    "SpeakerName": "Andy Lee ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Nicholas Hemley",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 22,
+    "Title": "",
+    "Status": 1,
+    "SpeakerName": "Michael Tinning ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Mike Tinning",
+    "AdminImageUrl": "https://trello-avatars.s3.amazonaws.com/f02047b241ad91ec542cba7ea31a8d90/50.png"
+  },
+  {
+    "TalkId": 23,
+    "Title": "",
+    "Status": 1,
+    "SpeakerName": "Kerstin Eder ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Nicholas Hemley",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 24,
+    "Title": "Visualising Geospatial Big Data ",
+    "Status": 1,
+    "SpeakerName": "Dan Cook ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 25,
+    "Title": "",
+    "Status": 1,
+    "SpeakerName": "Ashley Nolan ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Stephen Ford",
+    "AdminImageUrl": "https://trello-avatars.s3.amazonaws.com/6f93e51ced847bfcaa9dc2011a62a65b/50.png"
+  },
+  {
+    "TalkId": 26,
+    "Title": "",
+    "Status": 1,
+    "SpeakerName": "Lukasz (Luke) Kreczko ",
+    "SpeakerEmail": "l.kreczko@bristol.ac.uk",
+    "SpeakerRating": 0,
+    "AdminName": "Stephen Ford",
+    "AdminImageUrl": "https://trello-avatars.s3.amazonaws.com/6f93e51ced847bfcaa9dc2011a62a65b/50.png"
+  },
+  {
+    "TalkId": 27,
+    "Title": "Unikernels",
+    "Status": 1,
+    "SpeakerName": "Daniel Drozdzewski ",
+    "SpeakerEmail": "ddrozdzewski@scottlogic.com",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 28,
+    "Title": "",
+    "Status": 1,
+    "SpeakerName": "Rachel Andrew ",
+    "SpeakerEmail": "me@rachelandrew.co.uk",
+    "SpeakerRating": 0,
+    "AdminName": "Nicholas Hemley",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 29,
+    "Title": "DevOps",
+    "Status": 1,
+    "SpeakerName": "Paul Swartout ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Nicholas Hemley",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 30,
+    "Title": "DevOps - monitoring large systems with Sensu",
+    "Status": 1,
+    "SpeakerName": "Toby Jackson ",
+    "SpeakerEmail": "toby@warmfusion.co.uk",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 31,
+    "Title": "DDD, event sourcing, CQRS",
+    "Status": 1,
+    "SpeakerName": "Rich Knight ",
+    "SpeakerEmail": "rich@rich-knight.com",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 32,
+    "Title": "Go: as fast as C++ and as simple as Python?",
+    "Status": 1,
+    "SpeakerName": "Thomas Guest ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 33,
+    "Title": "Quantum Engineering",
+    "Status": 1,
+    "SpeakerName": "Chris Erven ",
+    "SpeakerEmail": "",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 34,
+    "Title": "Feeling without Touching",
+    "Status": 1,
+    "SpeakerName": "Tom Carter ",
+    "SpeakerEmail": "tom@ultrahaptics.com",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  },
+  {
+    "TalkId": 35,
+    "Title": "How to build a Recommendation Engine",
+    "Status": 1,
+    "SpeakerName": "Dave Simons ",
+    "SpeakerEmail": "12e.david@gmail.com",
+    "SpeakerRating": 0,
+    "AdminName": "Chris Smith",
+    "AdminImageUrl": "https://placebear.com/50/50"
+  }
+]
