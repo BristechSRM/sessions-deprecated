@@ -3,27 +3,14 @@
 open System
 open Speakers.Models
 open Speakers.Entities
-
-
-(*
-Excluded and replaced with json import until sql connection issues are fixed
 open System.Configuration
 open MySql.Data.MySqlClient
 open Dapper
-
 
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 
 let connection = new MySqlConnection(connectionString)
 connection.Open()
-
-*)
-
-open Newtonsoft.Json
-open System.IO
-
-let importFilePath = @"outlines-import.json"
-let talkOutlines = JsonConvert.DeserializeObject<TalkOutlineEntity seq>(File.ReadAllText(importFilePath))
 
 let entityToTalkOutline (entity: TalkOutlineEntity) =
     {
@@ -39,12 +26,15 @@ let entityToTalkOutline (entity: TalkOutlineEntity) =
     }
 
 let getAllTalkOutlines =
-    talkOutlines 
+    connection.Query<TalkOutlineEntity>("select * from talk_outlines")
     |> Seq.map entityToTalkOutline
-//    Excluded and replaced with json import until sql connection issues are fixed
-//    connection.Query<TalkOutlineEntity>("select * from talk_outlines")
-//    |> Seq.map entityToTalkOutline
 
+let getTalkOutline talkId =
+    let talkOutlines = connection.Query<TalkOutlineEntity>("select * from talk_outlines where talkId = " + talkId.ToString())
+    if Seq.isEmpty talkOutlines then
+        None
+    else 
+        Some (entityToTalkOutline (Seq.head talkOutlines))
 
 
 
