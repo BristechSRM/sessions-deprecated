@@ -1,7 +1,5 @@
 ﻿namespace Speakers.Models
 
-open System
-
 type Rating = 
     | Zero = 0
     | One = 1
@@ -25,7 +23,6 @@ type TalkOutline = {
     SpeakerName : string
     SpeakerEmail : string
     SpeakerRating: Rating
-    SpeakerLastContacted: DateTime
     AdminName: string
     AdminImageUrl: string
 }

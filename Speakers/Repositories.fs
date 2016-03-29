@@ -1,6 +1,5 @@
 ﻿module Speakers.Repositories
 
-open System
 open Speakers.Models
 open Speakers.Entities
 open System.Configuration
@@ -12,7 +11,7 @@ let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConne
 let connection = new MySqlConnection(connectionString)
 connection.Open()
 
-let entityToTalkOutline (entity: TalkOutlineEntity) =
+let entityToTalkOutline (entity: TalkOutlineEntity): TalkOutline =
     {
         TalkId = entity.TalkId;
         Title = entity.Title;
@@ -20,7 +19,6 @@ let entityToTalkOutline (entity: TalkOutlineEntity) =
         SpeakerName = entity.SpeakerName;
         SpeakerEmail = entity.SpeakerEmail;
         SpeakerRating = enum<Rating>((int)entity.SpeakerRating);
-        SpeakerLastContacted = DateTime.Now;
         AdminName = entity.AdminName;
         AdminImageUrl = entity.AdminImageUrl
     }
