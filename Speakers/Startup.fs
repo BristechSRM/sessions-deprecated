@@ -6,6 +6,10 @@ open System.Net.Http.Headers
 open System.Web.Http
 
 module private ConfigurationHelpers =
+    let configureLogging (config : HttpConfiguration) =
+        config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always |> ignore
+        config
+
     let configureCors (config : HttpConfiguration) =
         let cors = Cors.EnableCorsAttribute("*","*","*")
         config.EnableCors(cors)
@@ -34,11 +38,12 @@ module private ConfigurationHelpers =
 
     let registerConfiguration (config : HttpConfiguration) =
         config
+        |> configureLogging
         |> configureCors
         |> configureRoutes
         |> configureSerializationFormatters
 
 type Startup() =
     member __.Configuration (appBuilder: IAppBuilder) =
-        let config = ConfigurationHelpers.registerConfiguration( new HttpConfiguration())
+        let config = ConfigurationHelpers.registerConfiguration( new HttpConfiguration())        
         appBuilder.UseWebApi(config) |> ignore
