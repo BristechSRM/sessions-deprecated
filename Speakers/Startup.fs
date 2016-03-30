@@ -7,7 +7,7 @@ open System.Web.Http
 
 module private ConfigurationHelpers =
     let configureLogging (config : HttpConfiguration) =
-        config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always |> ignore
+        config.IncludeErrorDetailPolicy <- IncludeErrorDetailPolicy.Always
         config
 
     let configureCors (config : HttpConfiguration) =
