@@ -10,6 +10,6 @@ open Speakers.Repositories
 type DocsController() =
     inherit ApiController()
 
-    member x.Get() =                
-        let docs = JObject.Parse(File.ReadAllText("api.json"));
-        x.Request.CreateResponse(HttpStatusCode.OK, docs, "application/json")
+    member x.Get() =                        
+        let docs = JObject.Parse(File.ReadAllText("./api.json"));        
+        x.Request.CreateResponse(HttpStatusCode.OK, docs, "application/json");
