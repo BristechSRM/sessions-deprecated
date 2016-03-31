@@ -31,7 +31,7 @@
     <Compile Include="Entities.fs" />
     <Compile Include="Models.fs" />
     <Compile Include="Repositories.fs" />
-    <Compile Include="Controllers.fs" />
+    <Compile Include="TalkOutlinesController.fs" />
     <Compile Include="DocsController.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
