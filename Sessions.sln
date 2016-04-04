@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Speakers", "Speakers\Speakers.fsproj", "{60A10B97-6CC9-4E6D-824E-79EBF9B326DC}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Sessions", "Sessions\Sessions.fsproj", "{60A10B97-6CC9-4E6D-824E-79EBF9B326DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

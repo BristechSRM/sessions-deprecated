@@ -6,7 +6,7 @@ open System.Web.Http
 open Sessions.Repositories
 
 
-type TalkOutlinesController() =
+type SessionsController() =
     inherit ApiController()
 
     member x.Get() =

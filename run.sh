@@ -1,2 +1,2 @@
 cd build/output
-mono Speakers.exe
+mono Sessions.exe
