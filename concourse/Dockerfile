@@ -4,5 +4,5 @@ COPY binaries/ service/
 
 EXPOSE 9000
 
-CMD ["mono", "service/Speakers.exe"]
+CMD ["mono", "service/Sessions.exe"]
 
