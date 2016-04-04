@@ -1,117 +1,177 @@
-{
-    "swagger": "2.0",
-    "info": {
-        "title": "Speakers",
-        "description": "Retrieve details about Bristech speakers",
-        "version": "1.0.0"
-    },
-    "host": "api.bris.tech",
-    "schemes": [
-        "https"
-    ],
-    "basePath": "/",
-    "produces": [
-        "application/json"
-    ],
-    "paths": {
-        "/speakers": {
-            "get": {
-                "summary": "Retrieves speaker summaries",
-                "description": "The speakers summary details including speaker forename, surname and star rating\n",
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/SpeakerSummary"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "definitions": {
-        "SpeakerSummary": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "format": "guid",
-                    "description": "Unique identifier."
-                },
-                "forename": {
-                    "type": "string",
-                    "description": "Forename."
-                },
-                "surname": {
-                    "type": "string",
-                    "description": "Surname."
-                },
-                "rating": {
-                    "type": "integer",
-                    "description": "Rating (from 1 to 5)"
-                },
-                "imageUrl": {
-                    "type": "string",
-                    "description": "Image URL representing the product."
-                }
-            }
-        },
-        "Error": {
-            "type": "object",
-            "required": [
-                "message"
-            ],
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "errors": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ErrorDetail"
-                    }
-                }
-            }
-        },
-        "ErrorDetail": {
-            "type": "object",
-            "required": [
-                "resource",
-                "code",
-                "message"
-            ],
-            "properties": {
-                "resource": {
-                    "type": "string",
-                    "description": "The resource being accessed"
-                },
-                "field": {
-                    "type": "string",
-                    "description": "Optional field used for invalid or missing fields"
-                },
-                "code": {
-                    "type": "string",
-                    "description": "Can be missing (i.e. a resource is missing), missing-field (a required field was not sent in the request), invalid (the specified field does not pass validation or already-exists (the resource already exists).",
-                    "enum": [
-                        "missing",
-                        "missing-field",
-                        "invalid",
-                        "already-exists"
-                    ]
-                },
-                "message": {
-                    "type": "string"
-                }
-            }
-        }
-    }
-}
+swagger: '2.0'
+info:
+  title: Speakers
+  description: Retrieve details about Bristech speakers
+  version: 1.0.0
+host: api.bris.tech
+schemes:
+  - https
+basePath: /
+produces:
+  - application/json
+paths:
+  /sessions:
+    get:
+      summary: Retrieves session summaries.
+      description: >
+        The session summary details including session status, title, speaker identifier, and administrator identifier.
+        rating
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SessionSummary'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Adds a new session
+      description: Creates a new session assigning a unique identifier
+      parameters:
+        - in: body
+          name: body
+          description: New session details.
+          required: true
+          schema:
+            type: object
+            items:
+              $ref: "#/definitions/SessionDetail"
+      responses:
+        '201':
+          description: Session created
+          schema:
+            $ref: '#/definitions/Created'
+        '422':
+          description: Invalid session
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error'
+  /sessions/{sessionId}:
+    get:
+      summary: Retrieves the details of the specified session.
+      description: The full session details are retrieved.
+      parameters:
+        - in: path
+          name: sessionId
+          description: The session identifier
+          required: true
+          type: string
+          format: guid
+      responses:
+        '200':
+          description: The session is found.
+          schema:
+            $ref: '#/definitions/SessionDetail'
+        '404':
+          description: The session does not exist.
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  SessionSummary:
+    type: object
+    properties:
+      id:
+        type: string
+        format: guid
+        description: Unique identifier.
+      title:
+        type: string
+        description: The title of the session
+      status:
+        type: string
+        description: Current status of the session.
+        enum:
+          - assigned
+          - in-progress
+          - deferred
+          - topic-approved
+          - date-assigned
+      speakerId:
+        type: string
+        format: guid
+        description: The unique identifier of the speaker for the session
+      adminId:
+        type: string
+        format: guid
+        description: The unique identifier of the administrator for the session
+  SessionDetail:
+    type: object
+    required:
+      - id
+      - title
+    properties:
+      id:
+        type: string
+        format: guid
+        description: Unique identifier
+      title:
+        type: string
+        description: The title of the session
+      status:
+        type: string
+        description: Current status of the session.
+        enum:
+          - assigned
+          - in-progress
+          - deferred
+          - topic-approved
+          - date-assigned
+      speakerId:
+        type: string
+        format: guid
+        description: The unique identifier of the session speaker.
+      adminId:
+        type: string
+        format: guid
+        description: The unique identifier of the session administrator.
+      threadId:
+        type: string
+        format: guid
+        description: The unique identifier of any session conversation thread.
+  Error:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/ErrorDetail'
+  ErrorDetail:
+    type: object
+    required:
+      - resource
+      - code
+      - message
+    properties:
+      resource:
+        type: string
+        description: The resource being accessed
+      field:
+        type: string
+        description: Optional field used for invalid or missing fields
+      code:
+        type: string
+        description: 'Can be missing (i.e. a resource is missing), missing-field (a required field was not sent in the request), invalid (the specified field does not pass validation or already-exists (the resource already exists).'
+        enum:
+          - missing
+          - missing-field
+          - invalid
+          - already-exists
+      message:
+        type: string
+  Created:
+    type: object
+    properties:
+      id:
+        type: string
+        format: guid
+        description: The unique identifier for the resource
