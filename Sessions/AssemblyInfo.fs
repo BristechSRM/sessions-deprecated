@@ -1,9 +1,9 @@
-﻿module Speakers.AssemblyInfo
+﻿module Sessions.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices
 
-[<assembly:AssemblyTitle("Speakers")>]
+[<assembly:AssemblyTitle("Sessions")>]
 [<assembly:AssemblyDescription("")>]
 [<assembly:AssemblyConfiguration("")>]
 [<assembly:AssemblyCompany("")>]

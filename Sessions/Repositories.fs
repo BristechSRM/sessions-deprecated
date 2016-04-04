@@ -1,7 +1,7 @@
-﻿module Speakers.Repositories
+﻿module Sessions.Repositories
 
-open Speakers.Models
-open Speakers.Entities
+open Sessions.Models
+open Sessions.Entities
 open System.Configuration
 open MySql.Data.MySqlClient
 open Dapper

@@ -5,7 +5,7 @@ open System.IO
 open System.Net
 open System.Net.Http
 open System.Web.Http
-open Speakers.Repositories
+open Sessions.Repositories
 open FSharp.Data
 
 type DocsController() =

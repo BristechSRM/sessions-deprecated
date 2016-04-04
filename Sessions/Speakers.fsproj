@@ -5,10 +5,10 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{60A10B97-6CC9-4E6D-824E-79EBF9B326DC}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Speakers</RootNamespace>
-    <AssemblyName>Speakers</AssemblyName>
+    <RootNamespace>Sessions</RootNamespace>
+    <AssemblyName>Sessions</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <Name>Speakers</Name>
+    <Name>Sessions</Name>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
@@ -31,7 +31,7 @@
     <Compile Include="Entities.fs" />
     <Compile Include="Models.fs" />
     <Compile Include="Repositories.fs" />
-    <Compile Include="TalkOutlinesController.fs" />
+    <Compile Include="SessionsController.fs" />
     <Compile Include="DocsController.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
