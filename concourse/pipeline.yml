@@ -36,6 +36,9 @@ resources:
 - name: cluster
   type: ecs
   source:
-    task: create-build-image
+    stackName: development
+    clusterName: speakersCluster
+    taskName: speakersTaskDefinition
+    serviceName: speakerService
     accessKeyId: {{awsAccessKeyId}}
     secretAccessKey: {{awsSecretAccessKey}}
