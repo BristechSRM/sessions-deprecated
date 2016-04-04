@@ -14,10 +14,10 @@
         "application/json"
     ],
     "paths": {
-        "/speakers": {
+        "/talkoutlines": {
             "get": {
-                "summary": "Retrieves speaker summaries",
-                "description": "The speakers summary details including speaker forename, surname and star rating\n",
+                "summary": "Retrieves talkoutlines summaries",
+                "description": "The talkoutlines summary details including speaker forename, surname and star rating\n",
                 "responses": {
                     "200": {
                         "description": "Successful response",
