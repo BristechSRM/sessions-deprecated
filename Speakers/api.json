@@ -14,22 +14,90 @@
         "application/json"
     ],
     "paths": {
-        "/talkoutlines": {
+        "/sessions": {
             "get": {
-                "summary": "Retrieves talkoutlines summaries",
-                "description": "The talkoutlines summary details including speaker forename, surname and star rating\n",
+                "summary": "Retrieves session summaries.",
+                "description": "The session summary details including session status, title, speaker identifier, and administrator identifier. rating\n",
                 "responses": {
                     "200": {
                         "description": "Successful response",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/SpeakerSummary"
+                                "$ref": "#/definitions/SessionSummary"
                             }
                         }
                     },
                     "500": {
-                        "description": "Unexpected error",
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Adds a new session",
+                "description": "Creates a new session assigning a unique identifier",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "New session details.",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "items": {
+                                "$ref": "#/definitions/SessionDetail"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Session created",
+                        "schema": {
+                            "$ref": "#/definitions/Created"
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid session",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/sessions/{sessionId}": {
+            "get": {
+                "summary": "Retrieves the details of the specified session.",
+                "description": "The full session details are retrieved.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "sessionId",
+                        "description": "The session identifier",
+                        "required": true,
+                        "type": "string",
+                        "format": "guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The session is found.",
+                        "schema": {
+                            "$ref": "#/definitions/SessionDetail"
+                        }
+                    },
+                    "404": {
+                        "description": "The session does not exist.",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
@@ -39,7 +107,7 @@
         }
     },
     "definitions": {
-        "SpeakerSummary": {
+        "SessionSummary": {
             "type": "object",
             "properties": {
                 "id": {
@@ -47,21 +115,74 @@
                     "format": "guid",
                     "description": "Unique identifier."
                 },
-                "forename": {
+                "title": {
                     "type": "string",
-                    "description": "Forename."
+                    "description": "The title of the session"
                 },
-                "surname": {
+                "status": {
                     "type": "string",
-                    "description": "Surname."
+                    "description": "Current status of the session.",
+                    "enum": [
+                        "assigned",
+                        "in-progress",
+                        "deferred",
+                        "topic-approved",
+                        "date-assigned"
+                    ]
                 },
-                "rating": {
-                    "type": "integer",
-                    "description": "Rating (from 1 to 5)"
-                },
-                "imageUrl": {
+                "speakerId": {
                     "type": "string",
-                    "description": "Image URL representing the product."
+                    "format": "guid",
+                    "description": "The unique identifier of the speaker for the session"
+                },
+                "adminId": {
+                    "type": "string",
+                    "format": "guid",
+                    "description": "The unique identifier of the administrator for the session"
+                }
+            }
+        },
+        "SessionDetail": {
+            "type": "object",
+            "required": [
+                "id",
+                "title"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "guid",
+                    "description": "Unique identifier"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "The title of the session"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Current status of the session.",
+                    "enum": [
+                        "assigned",
+                        "in-progress",
+                        "deferred",
+                        "topic-approved",
+                        "date-assigned"
+                    ]
+                },
+                "speakerId": {
+                    "type": "string",
+                    "format": "guid",
+                    "description": "The unique identifier of the session speaker."
+                },
+                "adminId": {
+                    "type": "string",
+                    "format": "guid",
+                    "description": "The unique identifier of the session administrator."
+                },
+                "threadId": {
+                    "type": "string",
+                    "format": "guid",
+                    "description": "The unique identifier of any session conversation thread."
                 }
             }
         },
@@ -110,6 +231,16 @@
                 },
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "Created": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "guid",
+                    "description": "The unique identifier for the resource"
                 }
             }
         }
