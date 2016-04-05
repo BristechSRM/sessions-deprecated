@@ -23,7 +23,7 @@ let entityToTalkOutline (entity: TalkOutlineEntity): TalkOutline =
         AdminImageUrl = entity.AdminImageUrl
     }
 
-let getAllTalkOutlines =
+let getAllTalkOutlines () =
     connection.Query<TalkOutlineEntity>("select * from talk_outlines")
     |> Seq.map entityToTalkOutline
 

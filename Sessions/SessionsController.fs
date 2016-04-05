@@ -11,7 +11,7 @@ type SessionsController() =
 
     member x.Get() =
         Log.Information("Received GET request for talk outlines")
-        let talkOutlines = getAllTalkOutlines
+        let talkOutlines = getAllTalkOutlines()
         x.Request.CreateResponse(talkOutlines)
 
     member x.Get(id: int) =
