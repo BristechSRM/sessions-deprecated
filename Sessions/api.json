@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "Speakers",
-        "description": "Retrieve details about Bristech speakers",
+        "title": "Sessions",
+        "description": "Retrieve details about Bristech Sessions",
         "version": "1.0.0"
     },
     "host": "api.bris.tech",

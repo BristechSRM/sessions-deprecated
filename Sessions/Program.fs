@@ -2,7 +2,7 @@ module Program
 
 open Microsoft.Owin.Hosting
 open System.Threading
-open Speakers.Startup
+open Sessions.Startup
 
 (*
     Note: When running this app from Visual studio / On Windows / Possibly with mono develop (Not checked)

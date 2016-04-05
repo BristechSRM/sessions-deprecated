@@ -1,4 +1,4 @@
-﻿namespace Speakers.Startup
+﻿namespace Sessions.Startup
 
 open Newtonsoft.Json
 open Owin

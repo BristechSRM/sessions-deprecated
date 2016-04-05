@@ -1,4 +1,4 @@
-﻿namespace Speakers.Models
+﻿namespace Sessions.Models
 
 type Rating = 
     | Zero = 0

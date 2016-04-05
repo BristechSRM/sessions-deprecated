@@ -1,4 +1,4 @@
-﻿namespace Speakers.Entities
+﻿namespace Sessions.Entities
 
 type TalkOutlineEntity = {
     TalkId : int
