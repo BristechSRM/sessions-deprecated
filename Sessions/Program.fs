@@ -2,7 +2,7 @@ module Program
 
 open Microsoft.Owin.Hosting
 open System.Threading
-open Speakers.Logging
+open Sessions.Logging
 open Serilog
 open Sessions.Startup
 
