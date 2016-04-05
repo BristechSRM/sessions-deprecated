@@ -1,12 +1,6 @@
 ﻿namespace Sessions.Models
 
-type Rating = 
-    | Zero = 0
-    | One = 1
-    | Two = 2
-    | Three = 3
-    | Four = 4
-    | Five = 5
+open System
 
 type TalkStatus = 
     | Unassigned = 0
@@ -16,14 +10,11 @@ type TalkStatus =
     | TopicApproved = 4
     | DateAssigned = 5
 
-type TalkOutline = {
-    TalkId : int
+type Session = {
+    Id : Guid
     Title : string
     Status: TalkStatus
-    SpeakerName : string
-    SpeakerEmail : string
-    SpeakerRating: Rating
-    AdminName: string
-    AdminImageUrl: string
+    SpeakerId : Guid
+    AdminId: Guid
+    ThreadId: Guid
 }
-

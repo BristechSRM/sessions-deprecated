@@ -1,13 +1,10 @@
 ﻿namespace Sessions.Entities
 
-type TalkOutlineEntity = {
-    TalkId : int
+type SessionEntity = {
+    Id : string
     Title: string
     Status: sbyte
-    SpeakerName: string
-    SpeakerEmail: string
-    SpeakerRating: sbyte
-    AdminName: string
-    AdminImageUrl: string
+    SpeakerId: string
+    AdminId: string
+    ThreadId: string
 }
-
