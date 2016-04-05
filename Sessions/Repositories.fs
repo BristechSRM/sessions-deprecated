@@ -12,7 +12,7 @@ let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConne
 let connection = new MySqlConnection(connectionString)
 connection.Open()
 
-let entityToSession (entity: SessionEntity): Session =
+let entityToSessionDetail (entity: SessionEntity): SessionDetail =
     {
         Id = new Guid(entity.Id);
         Title = entity.Title;
@@ -22,7 +22,7 @@ let entityToSession (entity: SessionEntity): Session =
         ThreadId = new Guid(entity.ThreadId);
     }
     
-let entityToShortFormSession (entity: SessionEntity): ShortFormSession =
+let entityToSessionSummary (entity: SessionEntity): SessionSummary =
     {
         Id = new Guid(entity.Id);
         Title = entity.Title;
@@ -33,11 +33,11 @@ let entityToShortFormSession (entity: SessionEntity): ShortFormSession =
 
 let getAllSessions () =
     connection.Query<SessionEntity>("select * from sessions")
-    |> Seq.map entityToShortFormSession
+    |> Seq.map entityToSessionSummary
 
 let getSession id =
     let sessions = connection.Query<SessionEntity>("select * from sessions where id = " + id.ToString())
     if Seq.isEmpty sessions then
         None
     else 
-        Some (entityToSession (Seq.head sessions))
+        Some (entityToSessionDetail (Seq.head sessions))

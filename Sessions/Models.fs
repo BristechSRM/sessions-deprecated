@@ -10,7 +10,7 @@ type TalkStatus =
     | TopicApproved = 4
     | DateAssigned = 5
 
-type Session = {
+type SessionDetail = {
     Id : Guid
     Title : string
     Status: TalkStatus
@@ -19,7 +19,7 @@ type Session = {
     ThreadId: Guid
 }
 
-type ShortFormSession = {
+type SessionSummary = {
     Id : Guid
     Title : string
     Status: TalkStatus
