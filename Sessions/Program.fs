@@ -2,6 +2,8 @@ module Program
 
 open Microsoft.Owin.Hosting
 open System.Threading
+open Speakers.Logging
+open Serilog
 open Sessions.Startup
 
 (*
@@ -18,9 +20,11 @@ open Sessions.Startup
 *)
 [<EntryPoint>]
 let main _ =
+    setupLogging()
+
     let baseAddress = "http://*:9000"
     use server = WebApp.Start<Startup>(baseAddress)
-    printfn "Running on %s" baseAddress
+    Log.Information("Listening on {Address}", baseAddress)
 
     (*
         Because of the way the self hosted server works, it is waiting asynchronously for requests. 
