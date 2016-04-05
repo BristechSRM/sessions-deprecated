@@ -16,6 +16,9 @@
     "paths": {
         "/sessions": {
             "get": {
+                "tags": [
+                    "sessions"
+                ],
                 "summary": "Retrieves session summaries.",
                 "description": "The session summary details including session status, title, speaker identifier, and administrator identifier. rating\n",
                 "responses": {
@@ -37,6 +40,9 @@
                 }
             },
             "post": {
+                "tags": [
+                    "sessions"
+                ],
                 "summary": "Adds a new session",
                 "description": "Creates a new session assigning a unique identifier",
                 "parameters": [
@@ -77,6 +83,9 @@
         },
         "/sessions/{sessionId}": {
             "get": {
+                "tags": [
+                    "sessions"
+                ],
                 "summary": "Retrieves the details of the specified session.",
                 "description": "The full session details are retrieved.",
                 "parameters": [
