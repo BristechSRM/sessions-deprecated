@@ -18,3 +18,11 @@ type Session = {
     AdminId: Guid
     ThreadId: Guid
 }
+
+type ShortFormSession = {
+    Id : Guid
+    Title : string
+    Status: TalkStatus
+    SpeakerId : Guid
+    AdminId: Guid
+}

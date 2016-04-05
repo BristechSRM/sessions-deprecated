@@ -2,6 +2,7 @@
 
 open Sessions.Models
 open Sessions.Entities
+open System
 open System.Configuration
 open MySql.Data.MySqlClient
 open Dapper
@@ -11,28 +12,32 @@ let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConne
 let connection = new MySqlConnection(connectionString)
 connection.Open()
 
-let entityToTalkOutline (entity: TalkOutlineEntity): TalkOutline =
+let entityToSession (entity: SessionEntity): Session =
     {
-        TalkId = entity.TalkId;
+        Id = new Guid(entity.Id);
         Title = entity.Title;
         Status = enum<TalkStatus>((int)entity.Status);
-        SpeakerName = entity.SpeakerName;
-        SpeakerEmail = entity.SpeakerEmail;
-        SpeakerRating = enum<Rating>((int)entity.SpeakerRating);
-        AdminName = entity.AdminName;
-        AdminImageUrl = entity.AdminImageUrl
+        SpeakerId = new Guid(entity.SpeakerId);
+        AdminId = new Guid(entity.AdminId);
+        ThreadId = new Guid(entity.ThreadId);
+    }
+    
+let entityToShortFormSession (entity: SessionEntity): ShortFormSession =
+    {
+        Id = new Guid(entity.Id);
+        Title = entity.Title;
+        Status = enum<TalkStatus>((int)entity.Status);
+        SpeakerId = new Guid(entity.SpeakerId);
+        AdminId = new Guid(entity.AdminId);
     }
 
-let getAllTalkOutlines () =
-    connection.Query<TalkOutlineEntity>("select * from talk_outlines")
-    |> Seq.map entityToTalkOutline
+let getAllSessions () =
+    connection.Query<SessionEntity>("select * from sessions")
+    |> Seq.map entityToShortFormSession
 
-let getTalkOutline talkId =
-    let talkOutlines = connection.Query<TalkOutlineEntity>("select * from talk_outlines where talkId = " + talkId.ToString())
-    if Seq.isEmpty talkOutlines then
+let getSession id =
+    let sessions = connection.Query<SessionEntity>("select * from sessions where id = " + id.ToString())
+    if Seq.isEmpty sessions then
         None
     else 
-        Some (entityToTalkOutline (Seq.head talkOutlines))
-
-
-
+        Some (entityToSession (Seq.head sessions))
