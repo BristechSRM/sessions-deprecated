@@ -1,4 +1,4 @@
-﻿module Speakers.Logging
+﻿module Sessions.Logging
 
 open Serilog
 
