@@ -16,7 +16,7 @@ let entityToSessionDetail (entity: SessionEntity): SessionDetail =
     {
         Id = new Guid(entity.Id);
         Title = entity.Title;
-        Status = enum<TalkStatus>((int)entity.Status);
+        Status = enum<SessionStatus>((int)entity.Status);
         SpeakerId = new Guid(entity.SpeakerId);
         AdminId = new Guid(entity.AdminId);
         ThreadId = new Guid(entity.ThreadId);
@@ -26,7 +26,7 @@ let entityToSessionSummary (entity: SessionEntity): SessionSummary =
     {
         Id = new Guid(entity.Id);
         Title = entity.Title;
-        Status = enum<TalkStatus>((int)entity.Status);
+        Status = enum<SessionStatus>((int)entity.Status);
         SpeakerId = new Guid(entity.SpeakerId);
         AdminId = new Guid(entity.AdminId);
     }

@@ -2,7 +2,7 @@
 
 open System
 
-type TalkStatus = 
+type SessionStatus = 
     | Unassigned = 0
     | Assigned = 1
     | InProgress = 2
@@ -13,7 +13,7 @@ type TalkStatus =
 type SessionDetail = {
     Id : Guid
     Title : string
-    Status: TalkStatus
+    Status: SessionStatus
     SpeakerId : Guid
     AdminId: Guid
     ThreadId: Guid
@@ -22,7 +22,7 @@ type SessionDetail = {
 type SessionSummary = {
     Id : Guid
     Title : string
-    Status: TalkStatus
+    Status: SessionStatus
     SpeakerId : Guid
     AdminId: Guid
 }
