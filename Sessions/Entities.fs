@@ -3,7 +3,7 @@
 type SessionEntity = {
     Id : string
     Title: string
-    Status: sbyte
+    Status: string
     SpeakerId: string
     AdminId: string
     ThreadId: string
