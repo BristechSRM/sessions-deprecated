@@ -21,7 +21,7 @@ let entityToSessionDetail (entity: SessionEntity): SessionDetail =
         AdminId = new Guid(entity.AdminId);
         ThreadId = new Guid(entity.ThreadId);
     }
-    
+
 let entityToSessionSummary (entity: SessionEntity): SessionSummary =
     {
         Id = new Guid(entity.Id);
@@ -35,9 +35,12 @@ let getAllSessions () =
     connection.Query<SessionEntity>("select * from sessions")
     |> Seq.map entityToSessionSummary
 
-let getSession id =
-    let sessions = connection.Query<SessionEntity>("select * from sessions where id = " + id.ToString())
+type SessionSelectArgs = { SessionId : string }
+
+let getSession (id  :Guid) =
+    let args = {SessionId=id.ToString()}
+    let sessions = connection.Query<SessionEntity>( "select * from sessions where id = @SessionId" , args)
     if Seq.isEmpty sessions then
         None
-    else 
+    else
         Some (entityToSessionDetail (Seq.head sessions))
