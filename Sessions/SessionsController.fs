@@ -1,5 +1,6 @@
 ﻿namespace Sessions.Controllers
 
+open System
 open System.Net
 open System.Net.Http
 open System.Web.Http
@@ -10,13 +11,13 @@ type SessionsController() =
     inherit ApiController()
 
     member x.Get() =
-        Log.Information("Received GET request for talk outlines")
-        let talkOutlines = getAllTalkOutlines()
-        x.Request.CreateResponse(talkOutlines)
+        Log.Information("Received GET request for sessions")
+        let sessions = getAllSessions
+        x.Request.CreateResponse(sessions)
 
-    member x.Get(id: int) =
-        Log.Information("Received GET request for talk outline with talk id {id}", id)
-        let talkOutline = getTalkOutline id
-        match talkOutline with
-        | Some talkOutline -> x.Request.CreateResponse(talkOutline)
+    member x.Get(id: Guid) =
+        Log.Information("Received GET request for session with id {id}", id)
+        let session = getSession id
+        match session with
+        | Some session -> x.Request.CreateResponse(session)
         | None -> x.Request.CreateResponse(HttpStatusCode.NotFound)
