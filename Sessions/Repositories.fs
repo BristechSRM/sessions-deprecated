@@ -14,32 +14,32 @@ connection.Open()
 
 let entityToSessionDetail (entity: SessionEntity): SessionDetail =
     {
-        Id = new Guid(entity.Id);
+        Id = entity.Id
         Title = entity.Title;
         Status = entity.Status;
-        SpeakerId = new Guid(entity.SpeakerId);
-        AdminId = new Guid(entity.AdminId);
-        ThreadId = new Guid(entity.ThreadId);
+        SpeakerId = entity.SpeakerId;
+        AdminId = entity.AdminId;
+        ThreadId = entity.ThreadId;
     }
 
 let entityToSessionSummary (entity: SessionEntity): SessionSummary =
     {
-        Id = new Guid(entity.Id);
+        Id = entity.Id;
         Title = entity.Title;
         Status = entity.Status;
-        SpeakerId = new Guid(entity.SpeakerId);
-        AdminId = new Guid(entity.AdminId);
+        SpeakerId = entity.SpeakerId;
+        AdminId = entity.AdminId;
     }
 
 let getAllSessions () =
-    connection.Query<SessionEntity>("select * from sessions")
+    connection.Query<SessionEntity>("SELECT * FROM sessions")
     |> Seq.map entityToSessionSummary
 
-type SessionSelectArgs = { SessionId : string }
+type SessionSelectArgs = { SessionId: Guid }
 
-let getSession (id  :Guid) =
-    let args = {SessionId=id.ToString()}
-    let sessions = connection.Query<SessionEntity>( "select * from sessions where id = @SessionId" , args)
+let getSession (id: Guid) =
+    let args = { SessionId = id }
+    let sessions = connection.Query<SessionEntity>("SELECT * FROM sessions WHERE id = @SessionId", args)
     if Seq.isEmpty sessions then
         None
     else

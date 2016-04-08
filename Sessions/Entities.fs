@@ -1,10 +1,11 @@
 ﻿namespace Sessions.Entities
+open System
 
 type SessionEntity = {
-    Id : string
+    Id: Guid
     Title: string
     Status: string
-    SpeakerId: string
-    AdminId: string
-    ThreadId: string
+    SpeakerId: Guid
+    AdminId: Guid
+    ThreadId: Guid
 }
