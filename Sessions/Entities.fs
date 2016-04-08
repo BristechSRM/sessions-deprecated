@@ -1,7 +1,7 @@
 ﻿namespace Sessions.Entities
 
 type SessionEntity = {
-    Id : string
+    Id : int
     Title: string
     Status: string
     SpeakerId: string

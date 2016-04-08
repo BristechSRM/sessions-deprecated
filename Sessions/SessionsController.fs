@@ -12,10 +12,10 @@ type SessionsController() =
 
     member x.Get() =
         Log.Information("Received GET request for sessions")
-        let sessions = getAllSessions
+        let sessions = getAllSessions()
         x.Request.CreateResponse(sessions)
 
-    member x.Get(id: Guid) =
+    member x.Get(id: string) =
         Log.Information("Received GET request for session with id {id}", id)
         let session = getSession id
         match session with
