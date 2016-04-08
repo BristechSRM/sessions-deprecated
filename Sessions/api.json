@@ -52,10 +52,7 @@
                         "description": "New session details.",
                         "required": true,
                         "schema": {
-                            "type": "object",
-                            "items": {
-                                "$ref": "#/definitions/SessionDetail"
-                            }
+                            "$ref": "#/definitions/NewSessionDetail"
                         }
                     }
                 ],
@@ -172,6 +169,46 @@
                     "type": "string",
                     "description": "Current status of the session.",
                     "enum": [
+                        "unassigned",
+                        "assigned",
+                        "in-progress",
+                        "deferred",
+                        "topic-approved",
+                        "date-assigned"
+                    ]
+                },
+                "speakerId": {
+                    "type": "string",
+                    "format": "guid",
+                    "description": "The unique identifier of the session speaker."
+                },
+                "adminId": {
+                    "type": "string",
+                    "format": "guid",
+                    "description": "The unique identifier of the session administrator."
+                },
+                "threadId": {
+                    "type": "string",
+                    "format": "guid",
+                    "description": "The unique identifier of any session conversation thread."
+                }
+            }
+        },
+        "NewSessionDetail": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "The title of the session"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Current status of the session.",
+                    "enum": [
+                        "unassigned",
                         "assigned",
                         "in-progress",
                         "deferred",
