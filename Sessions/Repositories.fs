@@ -46,7 +46,7 @@ let getSession (id: Guid) =
     else
         Some (entityToSessionDetail (Seq.head sessions))
 
-let executeCommandInTransaction (command : MySqlCommand) = 
+let executeInTransaction (command : MySqlCommand) = 
     use transaction = connection.BeginTransaction()
     command.ExecuteNonQuery() |> ignore
     transaction.Commit()
@@ -62,6 +62,6 @@ let createSession (sessionsDetail : SessionDetail) =
     command.Parameters.Add("@speakerId", MySqlDbType.Guid).Value <- sessionsDetail.SpeakerId
     command.Parameters.Add("@adminId", MySqlDbType.Guid).Value <- sessionsDetail.AdminId
     command.Parameters.Add("@threadId", MySqlDbType.Guid).Value <- sessionsDetail.ThreadId
-    command |> executeCommandInTransaction |> ignore
+    command |> executeInTransaction |> ignore
 
     id
