@@ -62,6 +62,6 @@ let createSession (sessionsDetail : SessionDetail) =
     command.Parameters.Add("@speakerId", MySqlDbType.Guid).Value <- sessionsDetail.SpeakerId
     command.Parameters.Add("@adminId", MySqlDbType.Guid).Value <- sessionsDetail.AdminId
     command.Parameters.Add("@threadId", MySqlDbType.Guid).Value <- sessionsDetail.ThreadId
-    executeCommandInTransaction command |> ignore
+    command |> executeCommandInTransaction |> ignore
 
     id
