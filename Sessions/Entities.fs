@@ -1,5 +1,4 @@
 ﻿namespace Sessions.Entities
-open System
 
 open System
 
