@@ -46,15 +46,22 @@ let getSession (id: Guid) =
     else
         Some (entityToSessionDetail (Seq.head sessions))
 
+let executeCommandInTransaction (command : MySqlCommand) = 
+    use transaction = connection.BeginTransaction()
+    command.ExecuteNonQuery() |> ignore
+    transaction.Commit()
+
 let createSession (sessionsDetail : SessionDetail) = 
     let commandStr = "insert into sessions(id, title, status, speakerId, adminId, threadId) values 
         (@id, @title, @status, @speakerId, @adminId, @threadId)"
     let command = new MySqlCommand(commandStr, connection)
-    command.Parameters.Add("@id", MySqlDbType.Guid).Value <- Guid.NewGuid()
+    let id = Guid.NewGuid()
+    command.Parameters.Add("@id", MySqlDbType.Guid).Value <- id
     command.Parameters.Add("@title", MySqlDbType.String).Value <- sessionsDetail.Title
     command.Parameters.Add("@status", MySqlDbType.Enum).Value <- sessionsDetail.Status
     command.Parameters.Add("@speakerId", MySqlDbType.Guid).Value <- sessionsDetail.SpeakerId
     command.Parameters.Add("@adminId", MySqlDbType.Guid).Value <- sessionsDetail.AdminId
     command.Parameters.Add("@threadId", MySqlDbType.Guid).Value <- sessionsDetail.ThreadId
+    executeCommandInTransaction |> ignore
 
-    command.ExecuteNonQuery() |> ignore
+    id

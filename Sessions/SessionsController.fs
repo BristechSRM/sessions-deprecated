@@ -7,9 +7,8 @@ open System.Web.Http
 open Sessions.Repositories
 open Serilog
 open Sessions.Models
-open Sessions.ControllerConstants
 open System.Data.SqlClient
-
+ 
 type SessionsController() =
     inherit ApiController()
 
@@ -28,8 +27,8 @@ type SessionsController() =
     member x.Post([<FromBody>] newSessionDetail : SessionDetail) = 
         Log.Information("Received POST request for new session: {@SessionDetail}", newSessionDetail)
         try
-            createSession newSessionDetail
-            x.Request.CreateResponse(HttpStatusCode.Created)
+            let sessionId = createSession newSessionDetail
+            x.Request.CreateResponse(HttpStatusCode.Created, sessionId)
         with
-            | :? SqlException as ex -> x.Request.CreateResponse(UNPROCESSABLE_ENTITY)
+            | :? SqlException as ex-> x.Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message)
             | _ -> x.Request.CreateResponse(HttpStatusCode.InternalServerError)

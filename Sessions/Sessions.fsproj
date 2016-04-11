@@ -31,7 +31,6 @@
     <Compile Include="Entities.fs" />
     <Compile Include="Models.fs" />
     <Compile Include="Repositories.fs" />
-    <Compile Include="ControllerConstants.fs" />
     <Compile Include="SessionsController.fs" />
     <Compile Include="DocsController.fs" />
     <Compile Include="Logging.fs" />
