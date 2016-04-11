@@ -23,6 +23,7 @@ type SessionSummary =
       AdminId : Guid }
 
 type Rating = 
+    | Zero = 0
     | One = 1
     | Two = 2
     | Three = 3
@@ -37,10 +38,10 @@ type HandleType =
 
 type HandleSummary = 
     { Type : HandleType
-      Id : string }
+      Identifier : string }
 
 [<CLIMutable>]
-type ProfileWithId = 
+type Profile = 
     { Id : Guid
       Forename : string
       Surname : string

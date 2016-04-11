@@ -31,6 +31,7 @@
     <Compile Include="Entities.fs" />
     <Compile Include="Models.fs" />
     <Compile Include="Repositories.fs" />
+    <Compile Include="ProfilesRepository.fs" />
     <Compile Include="ProfilesController.fs" />
     <Compile Include="SessionsController.fs" />
     <Compile Include="DocsController.fs" />
@@ -49,6 +50,9 @@
     <Reference Include="Dapper">
       <HintPath>..\packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Dapper.Contrib">
+      <HintPath>..\packages\Dapper.Contrib.1.43\lib\net45\Dapper.Contrib.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Core">
       <HintPath>..\packages\FSharp.Core.3.1.2.5\lib\net40\FSharp.Core.dll</HintPath>
