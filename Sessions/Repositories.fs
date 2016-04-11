@@ -6,7 +6,6 @@ open System
 open System.Configuration
 open MySql.Data.MySqlClient
 open Dapper
-open Serilog
 
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 
@@ -46,22 +45,17 @@ let getSession (id: Guid) =
     else
         Some (entityToSessionDetail (Seq.head sessions))
 
-let executeInTransaction (command : MySqlCommand) = 
+let createSession (sessionDetail : SessionDetail) = 
+    let args = { Id = Guid.NewGuid()
+                 SessionDetail.Title = sessionDetail.Title
+                 Status = sessionDetail.Status
+                 SpeakerId = sessionDetail.SpeakerId
+                 AdminId = sessionDetail.AdminId
+                 ThreadId = sessionDetail.ThreadId}
+
     use transaction = connection.BeginTransaction()
-    command.ExecuteNonQuery() |> ignore
-    transaction.Commit()
+    connection.Execute("insert into sessions(id, title, status, speakerId, adminId, threadId) values 
+        (@Id, @Title, @Status, @SpeakerId, @AdminId, @ThreadId)", args) |> ignore
+    transaction.Commit()            
 
-let createSession (sessionsDetail : SessionDetail) = 
-    let commandStr = "insert into sessions(id, title, status, speakerId, adminId, threadId) values 
-        (@id, @title, @status, @speakerId, @adminId, @threadId)"
-    let command = new MySqlCommand(commandStr, connection)
-    let id = Guid.NewGuid()
-    command.Parameters.Add("@id", MySqlDbType.Guid).Value <- id
-    command.Parameters.Add("@title", MySqlDbType.String).Value <- sessionsDetail.Title
-    command.Parameters.Add("@status", MySqlDbType.Enum).Value <- sessionsDetail.Status
-    command.Parameters.Add("@speakerId", MySqlDbType.Guid).Value <- sessionsDetail.SpeakerId
-    command.Parameters.Add("@adminId", MySqlDbType.Guid).Value <- sessionsDetail.AdminId
-    command.Parameters.Add("@threadId", MySqlDbType.Guid).Value <- sessionsDetail.ThreadId
-    command |> executeInTransaction |> ignore
-
-    id
+    args.Id
