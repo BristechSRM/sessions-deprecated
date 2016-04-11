@@ -1,6 +1,8 @@
 ﻿namespace Sessions.Entities
 open System
 
+open System
+
 type SessionEntity = {
     Id: Guid
     Title: string

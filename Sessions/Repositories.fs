@@ -6,6 +6,7 @@ open System
 open System.Configuration
 open MySql.Data.MySqlClient
 open Dapper
+open Serilog
 
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 
@@ -44,3 +45,16 @@ let getSession (id: Guid) =
         None
     else
         Some (entityToSessionDetail (Seq.head sessions))
+
+let createSession (sessionsDetail : SessionDetail) = 
+    let commandStr = "insert into sessions(id, title, status, speakerId, adminId, threadId) values 
+        (@id, @title, @status, @speakerId, @adminId, @threadId)"
+    let command = new MySqlCommand(commandStr, connection)
+    command.Parameters.Add("@id", MySqlDbType.Guid).Value <- Guid.NewGuid()
+    command.Parameters.Add("@title", MySqlDbType.String).Value <- sessionsDetail.Title
+    command.Parameters.Add("@status", MySqlDbType.Enum).Value <- sessionsDetail.Status
+    command.Parameters.Add("@speakerId", MySqlDbType.Guid).Value <- sessionsDetail.SpeakerId
+    command.Parameters.Add("@adminId", MySqlDbType.Guid).Value <- sessionsDetail.AdminId
+    command.Parameters.Add("@threadId", MySqlDbType.Guid).Value <- sessionsDetail.ThreadId
+
+    command.ExecuteNonQuery() |> ignore
