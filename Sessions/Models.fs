@@ -7,6 +7,7 @@ open Newtonsoft.Json
 type SessionDetail = {
     Id : Guid
     Title : string
+    [<JsonProperty(Required = Required.Always)>]
     Status: String
     [<JsonProperty(Required = Required.Always)>]
     SpeakerId : Guid
