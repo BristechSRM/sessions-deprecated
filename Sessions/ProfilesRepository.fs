@@ -10,12 +10,18 @@ open Sessions.Entities
 
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 
-let entityToProfile (entity : ProfileEntity) : Profile = 
+let entityToModel (entity : ProfileEntity) : Profile = 
     { Id = entity.Id
       Forename = entity.Forename
       Surname = entity.Surname
       Rating = enum entity.Rating
       Handles = [||] }
+
+let modelToEntity (model : Profile) : ProfileEntity = 
+    {   ProfileEntity.Id = model.Id
+        Forename = model.Forename
+        Surname = model.Surname
+        Rating = (int) model.Rating }
 
 //TODO result DU
 //TODO handles
@@ -25,7 +31,7 @@ let getProfile (id : Guid) =
     use connection = new MySqlConnection(connectionString)
     connection.Open()
     try 
-        let result = connection.Get<ProfileEntity>(id)
+        let result = connection.Get<ProfileEntity>(id) |> entityToModel
         connection.Close()
         Some result
     with :? System.Exception as ex -> 
@@ -33,13 +39,8 @@ let getProfile (id : Guid) =
         None
 
 let addProfile (profile : Profile) = 
-    let id = Guid.NewGuid()
-    
-    let profile = 
-        { ProfileEntity.Id = id
-          Forename = profile.Forename
-          Surname = profile.Surname
-          Rating = (int) profile.Rating }
+    let id = Guid.NewGuid()    
+    let profile = modelToEntity {profile with Id = id }
     
     use connection = new MySqlConnection(connectionString)
     connection.Open()
