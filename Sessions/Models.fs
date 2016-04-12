@@ -1,7 +1,16 @@
 ﻿namespace Models
 
 open System
+open System.Net
 open Newtonsoft.Json 
+
+type Result<'Success,'Failure> = 
+    | Success of 'Success
+    | Failure of 'Failure
+
+type ServerError = 
+    { HttpStatus : HttpStatusCode
+      Message : string }
 
 [<CLIMutable>]
 type SessionDetail = {

@@ -7,6 +7,10 @@ open System.Configuration
 open MySql.Data.MySqlClient
 open Dapper
 
+//TODO Use Result DU 
+//TODO use connection per query
+//TODO common code with other repo
+
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 let connection = new MySqlConnection(connectionString)
 
@@ -20,7 +24,7 @@ let entityToSessionDetail (entity : SessionEntity) : SessionDetail =
       AdminId = entity.AdminId
       ThreadId = entity.ThreadId }
 
-let getSessionSummaries() = connection.Query<SessionSummary>("SELECT * FROM session_summaries")
+let getSessionSummaries() = connection.Query<SessionSummaryEntity>("SELECT * FROM session_summaries")
 
 type SessionSelectArgs = 
     { SessionId : Guid }

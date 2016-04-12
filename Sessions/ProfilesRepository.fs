@@ -1,14 +1,17 @@
 ﻿module ProfilesRepository
 
 open System
+open System.Net
 open Dapper
 open Dapper.Contrib.Extensions
 open System.Configuration
+open System.Data.SqlClient
 open MySql.Data.MySqlClient
 open Models
 open Entities
 
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
+let getConnection() = new MySqlConnection(connectionString)
 
 let entityToModel (entity : ProfileEntity) : Profile = 
     { Id = entity.Id
@@ -25,26 +28,28 @@ let modelToEntity (model : Profile) : ProfileEntity =
         Rating = (int) model.Rating 
         ImageUrl = model.ImageUrl}
 
-//TODO result DU
 //TODO handles
-//TODO returning error messages and exception handling fully
 
 let getProfile (id : Guid) = 
-    use connection = new MySqlConnection(connectionString)
+    use connection = getConnection() 
     connection.Open()
     try 
         let result = connection.Get<ProfileEntity>(id) |> entityToModel
         connection.Close()
-        Some result
-    with :? System.Exception as ex -> 
-        connection.Close()
-        None
+        Success result
+    with 
+        | :? SqlException as ex -> 
+            connection.Close()
+            Failure { HttpStatus = HttpStatusCode.BadRequest; Message = ex.Message}
+        | _-> 
+            connection.Close()
+            Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = ""}
 
 let addProfile (profile : Profile) = 
     let id = Guid.NewGuid()    
     let profile = modelToEntity {profile with Id = id }
     
-    use connection = new MySqlConnection(connectionString)
+    use connection = getConnection() 
     connection.Open()
     use transaction = connection.BeginTransaction()
     try 
@@ -52,8 +57,13 @@ let addProfile (profile : Profile) =
         if result <> 1 then failwith "Unknown failure. Profile insert failed"
         transaction.Commit()
         connection.Close()
-        Some id
-    with :? System.Exception as ex -> 
-        transaction.Rollback()
-        connection.Close()
-        None
+        Success id
+    with 
+        | :? SqlException as ex -> 
+            transaction.Rollback()
+            connection.Close()
+            Failure { HttpStatus = HttpStatusCode.BadRequest; Message = ex.Message}
+        | _-> 
+            transaction.Rollback()
+            connection.Close()
+            Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = ""}
