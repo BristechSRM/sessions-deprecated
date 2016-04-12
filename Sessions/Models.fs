@@ -15,10 +15,36 @@ type SessionDetail = {
     ThreadId: Guid
 }
 
-type SessionSummary = {
-    Id : Guid
-    Title : string
-    Status: String
-    SpeakerId : Guid
-    AdminId: Guid
-}
+type SessionSummary = 
+    { Id : Guid
+      Title : string
+      Status : String
+      SpeakerId : Guid
+      AdminId : Guid }
+
+type Rating = 
+    | Zero = 0
+    | One = 1
+    | Two = 2
+    | Three = 3
+    | Four = 4
+    | Five = 5
+
+type HandleType = 
+    | Email
+    | Github
+    | Mobile
+    | Twitter
+    | Meetup
+
+type Handle = 
+    { Type : HandleType
+      Identifier : string }
+
+[<CLIMutable>]
+type Profile = 
+    { Id : Guid
+      Forename : string
+      Surname : string
+      Rating : Rating
+      Handles : Handle [] }
