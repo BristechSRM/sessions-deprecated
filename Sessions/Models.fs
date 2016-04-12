@@ -1,9 +1,9 @@
 ﻿namespace Models
 
 open System
-open Newtonsoft.Json
+open Newtonsoft.Json 
 
-[<CLIMutableAttribute>]
+[<CLIMutable>]
 type SessionDetail = {
     Id : Guid
     Title : string
@@ -14,13 +14,6 @@ type SessionDetail = {
     AdminId: Guid
     ThreadId: Guid
 }
-
-type SessionSummary = 
-    { Id : Guid
-      Title : string
-      Status : String
-      SpeakerId : Guid
-      AdminId : Guid }
 
 type Rating = 
     | Zero = 0

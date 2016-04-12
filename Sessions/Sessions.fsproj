@@ -33,6 +33,7 @@
     <Compile Include="SessionsRepository.fs" />
     <Compile Include="ProfilesRepository.fs" />
     <Compile Include="ProfilesController.fs" />
+    <Compile Include="SessionSummariesController.fs" />
     <Compile Include="SessionsController.fs" />
     <Compile Include="DocsController.fs" />
     <Compile Include="Logging.fs" />

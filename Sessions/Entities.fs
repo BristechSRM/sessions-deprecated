@@ -11,6 +11,16 @@ type SessionEntity =
       AdminId : Guid
       ThreadId : Guid }
 
+[<CLIMutable>]
+type SessionSummaryEntity = 
+    { Id : Guid
+      Title : string
+      Status : string
+      SpeakerName : string
+      SpeakerRating : int
+      AdminName : string
+      AdminImageUrl : string option}
+
 [<Table("profiles")>]
 type ProfileEntity = 
     { [<Key>]

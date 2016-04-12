@@ -20,14 +20,7 @@ let entityToSessionDetail (entity : SessionEntity) : SessionDetail =
       AdminId = entity.AdminId
       ThreadId = entity.ThreadId }
 
-let entityToSessionSummary (entity : SessionEntity) : SessionSummary = 
-    { Id = entity.Id
-      Title = entity.Title
-      Status = entity.Status
-      SpeakerId = entity.SpeakerId
-      AdminId = entity.AdminId }
-
-let getAllSessions() = connection.Query<SessionEntity>("SELECT * FROM sessions") |> Seq.map entityToSessionSummary
+let getSessionSummaries() = connection.Query<SessionSummary>("SELECT * FROM session_summaries")
 
 type SessionSelectArgs = 
     { SessionId : Guid }
