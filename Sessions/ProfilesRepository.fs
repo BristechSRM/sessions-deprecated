@@ -15,13 +15,15 @@ let entityToModel (entity : ProfileEntity) : Profile =
       Forename = entity.Forename
       Surname = entity.Surname
       Rating = enum entity.Rating
+      ImageUrl = entity.ImageUrl
       Handles = [||] }
 
 let modelToEntity (model : Profile) : ProfileEntity = 
     {   ProfileEntity.Id = model.Id
         Forename = model.Forename
         Surname = model.Surname
-        Rating = (int) model.Rating }
+        Rating = (int) model.Rating 
+        ImageUrl = model.ImageUrl}
 
 //TODO result DU
 //TODO handles

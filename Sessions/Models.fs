@@ -47,4 +47,5 @@ type Profile =
       Forename : string
       Surname : string
       Rating : Rating
+      ImageUrl : string
       Handles : Handle [] }

@@ -17,4 +17,5 @@ type ProfileEntity =
       Id : Guid
       Forename : string
       Surname : string
-      Rating : int }
+      Rating : int
+      ImageUrl : string }
