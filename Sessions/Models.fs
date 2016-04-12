@@ -32,11 +32,12 @@ type Rating =
 
 type HandleType = 
     | Email
+    | Github
     | Mobile
     | Twitter
     | Meetup
 
-type HandleSummary = 
+type Handle = 
     { Type : HandleType
       Identifier : string }
 
@@ -46,4 +47,4 @@ type Profile =
       Forename : string
       Surname : string
       Rating : Rating
-      Handles : HandleSummary [] }
+      Handles : Handle [] }
