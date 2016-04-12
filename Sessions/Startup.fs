@@ -1,4 +1,4 @@
-﻿namespace Sessions.Startup
+﻿namespace Startup
 
 open Newtonsoft.Json
 open Owin

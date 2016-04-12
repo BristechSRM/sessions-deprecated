@@ -1,12 +1,12 @@
-﻿namespace Sessions.Controllers
+﻿namespace Controllers
 
 open System
 open System.Net
 open System.Net.Http
 open System.Web.Http
-open Sessions.Repositories
+open SessionsRepository
 open Serilog
-open Sessions.Models
+open Models
 open System.Data.SqlClient
  
 type SessionsController() =

@@ -1,4 +1,4 @@
-﻿namespace Sessions.Models
+﻿namespace Models
 
 open System
 open Newtonsoft.Json

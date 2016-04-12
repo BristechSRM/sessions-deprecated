@@ -1,12 +1,10 @@
-﻿module DocsController
+﻿namespace Controllers
 
 open Newtonsoft.Json.Linq
 open System.IO
 open System.Net
 open System.Net.Http
 open System.Web.Http
-open Sessions.Repositories
-open FSharp.Data
 open Serilog
 
 type DocsController() =

@@ -1,4 +1,4 @@
-﻿namespace Sessions.Entities
+﻿namespace Entities
 
 open System
 open Dapper.Contrib.Extensions

@@ -5,8 +5,8 @@ open Dapper
 open Dapper.Contrib.Extensions
 open System.Configuration
 open MySql.Data.MySqlClient
-open Sessions.Models
-open Sessions.Entities
+open Models
+open Entities
 
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 

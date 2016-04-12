@@ -1,11 +1,11 @@
-﻿module ProfilesController
+﻿namespace Controllers
 
 open System
 open System.Net
 open System.Net.Http
 open System.Web.Http
 open Serilog
-open Sessions.Models
+open Models
 
 type ProfilesController() = 
     inherit ApiController()
