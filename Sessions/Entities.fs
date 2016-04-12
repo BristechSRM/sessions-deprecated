@@ -29,3 +29,12 @@ type ProfileEntity =
       Surname : string
       Rating : int
       ImageUrl : string }
+
+[<Table("handles")>]
+type HandleEntity = 
+    { Id : int
+      Type : string
+      Identifier : string
+      [<Key>]
+      ProfileId : Guid }
+

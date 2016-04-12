@@ -13,13 +13,18 @@ open Entities
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 let getConnection() = new MySqlConnection(connectionString)
 
-let entityToModel (entity : ProfileEntity) : Profile = 
+let handleEntityToModel (entity : HandleEntity) = 
+    { Handle.Type = entity.Type 
+      Identifier = entity.Identifier}
+    
+
+let entityToModel (entity : ProfileEntity) handles : Profile = 
     { Id = entity.Id
       Forename = entity.Forename
       Surname = entity.Surname
       Rating = enum entity.Rating
       ImageUrl = entity.ImageUrl
-      Handles = [||] }
+      Handles = handles |> Seq.map handleEntityToModel }
 
 let modelToEntity (model : Profile) : ProfileEntity = 
     {   ProfileEntity.Id = model.Id
@@ -30,20 +35,25 @@ let modelToEntity (model : Profile) : ProfileEntity =
 
 //TODO handles
 
+type IdWrapper = 
+    { Id : Guid }
+
 let getProfile (id : Guid) = 
     use connection = getConnection() 
     connection.Open()
     try 
-        let result = connection.Get<ProfileEntity>(id) |> entityToModel
+        let handles = connection.Query<HandleEntity>("select * from handles where profileId = @Id",{Id = id})
+        let profileEntity = connection.Get<ProfileEntity>(id) 
+        let profile = entityToModel profileEntity handles
         connection.Close()
-        Success result
+        Success profile
     with 
         | :? SqlException as ex -> 
             connection.Close()
             Failure { HttpStatus = HttpStatusCode.BadRequest; Message = ex.Message}
-        | _-> 
+        | _ -> 
             connection.Close()
-            Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = ""}
+            Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = "Internal Server Error"}
 
 let addProfile (profile : Profile) = 
     let id = Guid.NewGuid()    
@@ -66,4 +76,4 @@ let addProfile (profile : Profile) =
         | _-> 
             transaction.Rollback()
             connection.Close()
-            Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = ""}
+            Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = "Internal Server Error"}

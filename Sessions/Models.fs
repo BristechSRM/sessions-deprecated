@@ -32,15 +32,9 @@ type Rating =
     | Four = 4
     | Five = 5
 
-type HandleType = 
-    | Email
-    | Github
-    | Mobile
-    | Twitter
-    | Meetup
-
+[<CLIMutable>]
 type Handle = 
-    { Type : HandleType
+    { Type : string
       Identifier : string }
 
 [<CLIMutable>]
@@ -50,4 +44,6 @@ type Profile =
       Surname : string
       Rating : Rating
       ImageUrl : string
-      Handles : Handle [] }
+      Handles : Handle seq }
+
+
