@@ -1,9 +1,18 @@
-﻿namespace Sessions.Models
+﻿namespace Models
 
 open System
-open Newtonsoft.Json
+open System.Net
+open Newtonsoft.Json 
 
-[<CLIMutableAttribute>]
+type Result<'Success,'Failure> = 
+    | Success of 'Success
+    | Failure of 'Failure
+
+type ServerError = 
+    { HttpStatus : HttpStatusCode
+      Message : string }
+
+[<CLIMutable>]
 type SessionDetail = {
     Id : Guid
     Title : string
@@ -14,13 +23,6 @@ type SessionDetail = {
     AdminId: Guid
     ThreadId: Guid
 }
-
-type SessionSummary = 
-    { Id : Guid
-      Title : string
-      Status : String
-      SpeakerId : Guid
-      AdminId : Guid }
 
 type Rating = 
     | Zero = 0
@@ -47,4 +49,5 @@ type Profile =
       Forename : string
       Surname : string
       Rating : Rating
+      ImageUrl : string
       Handles : Handle [] }

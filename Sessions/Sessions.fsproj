@@ -30,9 +30,10 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Entities.fs" />
     <Compile Include="Models.fs" />
-    <Compile Include="Repositories.fs" />
+    <Compile Include="SessionsRepository.fs" />
     <Compile Include="ProfilesRepository.fs" />
     <Compile Include="ProfilesController.fs" />
+    <Compile Include="SessionSummariesController.fs" />
     <Compile Include="SessionsController.fs" />
     <Compile Include="DocsController.fs" />
     <Compile Include="Logging.fs" />

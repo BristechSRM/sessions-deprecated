@@ -2,9 +2,9 @@ module Program
 
 open Microsoft.Owin.Hosting
 open System.Threading
-open Sessions.Logging
+open Logging
 open Serilog
-open Sessions.Startup
+open Startup
 
 (*
     Note: When running this app from Visual studio / On Windows / Possibly with mono develop (Not checked)

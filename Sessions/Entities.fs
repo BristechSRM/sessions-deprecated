@@ -1,4 +1,4 @@
-﻿namespace Sessions.Entities
+﻿namespace Entities
 
 open System
 open Dapper.Contrib.Extensions
@@ -11,10 +11,21 @@ type SessionEntity =
       AdminId : Guid
       ThreadId : Guid }
 
+[<CLIMutable>]
+type SessionSummaryEntity = 
+    { Id : Guid
+      Title : string
+      Status : string
+      SpeakerName : string
+      SpeakerRating : int
+      AdminName : string
+      AdminImageUrl : string}
+
 [<Table("profiles")>]
 type ProfileEntity = 
     { [<Key>]
       Id : Guid
       Forename : string
       Surname : string
-      Rating : int }
+      Rating : int
+      ImageUrl : string }
