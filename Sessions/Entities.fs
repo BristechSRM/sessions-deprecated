@@ -19,7 +19,7 @@ type SessionSummaryEntity =
       SpeakerName : string
       SpeakerRating : int
       AdminName : string
-      AdminImageUrl : string option}
+      AdminImageUrl : string}
 
 [<Table("profiles")>]
 type ProfileEntity = 
