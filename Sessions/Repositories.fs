@@ -46,12 +46,7 @@ let getSession (id: Guid) =
         Some (entityToSessionDetail (Seq.head sessions))
 
 let createSession (sessionDetail : SessionDetail) = 
-    let args = { Id = Guid.NewGuid()
-                 SessionDetail.Title = sessionDetail.Title
-                 Status = sessionDetail.Status
-                 SpeakerId = sessionDetail.SpeakerId
-                 AdminId = sessionDetail.AdminId
-                 ThreadId = sessionDetail.ThreadId}
+    let args = { sessionDetail with Id = Guid.NewGuid() }
 
     use transaction = connection.BeginTransaction()
     connection.Execute("insert into sessions(id, title, status, speakerId, adminId, threadId) values 
