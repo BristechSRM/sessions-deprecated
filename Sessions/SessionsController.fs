@@ -7,7 +7,6 @@ open System.Web.Http
 open SessionsRepository
 open Serilog
 open Models
-open System.Data.SqlClient
  
 type SessionsController() =
     inherit ApiController()
@@ -19,11 +18,8 @@ type SessionsController() =
         | Some session -> x.Request.CreateResponse(session)
         | None -> x.Request.CreateResponse(HttpStatusCode.NotFound)
 
-    member x.Post([<FromBody>] newSessionDetail : SessionDetail) = 
+    member x.Post(newSessionDetail : SessionDetail) = 
         Log.Information("Received POST request for new session: {@SessionDetail}", newSessionDetail)
-        try
-            let sessionId = createSession newSessionDetail
-            x.Request.CreateResponse(HttpStatusCode.Created, sessionId)
-        with
-            | :? SqlException as ex-> x.Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message)
-            | _ -> x.Request.CreateResponse(HttpStatusCode.InternalServerError)
+        match SessionsRepository.createSession newSessionDetail with
+        | Success sessionId -> x.Request.CreateResponse(HttpStatusCode.Created, sessionId)
+        | Failure error -> x.Request.CreateResponse(error.HttpStatus, error.Message)
