@@ -1,4 +1,5 @@
 ﻿namespace Sessions.Entities
+
 open System
 
 type SessionEntity = {
