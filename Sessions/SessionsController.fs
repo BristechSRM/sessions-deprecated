@@ -12,7 +12,7 @@ type SessionsController() =
     inherit ApiController()
 
     member x.Get(id: Guid) =
-        Log.Information("Received GET request for session with id {id}", id)
+        Log.Information("Received GET request for a session with id {id}", id)
         let session = getSession id
         match session with
         | Some session -> x.Request.CreateResponse(session)
