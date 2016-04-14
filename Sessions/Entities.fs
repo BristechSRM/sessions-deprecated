@@ -30,11 +30,9 @@ type ProfileEntity =
       Rating : int
       ImageUrl : string }
 
-[<Table("handles")>]
 type HandleEntity = 
-    { Id : int
+    { [<Key>]
+      ProfileId : Guid 
       Type : string
-      Identifier : string
-      [<Key>]
-      ProfileId : Guid }
+      Identifier : string }
 
