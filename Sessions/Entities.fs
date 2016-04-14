@@ -29,3 +29,10 @@ type ProfileEntity =
       Surname : string
       Rating : int
       ImageUrl : string }
+
+type HandleEntity = 
+    { [<Key>]
+      ProfileId : Guid 
+      Type : string
+      Identifier : string }
+
