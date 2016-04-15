@@ -7,10 +7,6 @@ open System.Web.Http
 open Serilog
 
 module private ConfigurationHelpers =
-    let configureLogging (config : HttpConfiguration) =
-        config.IncludeErrorDetailPolicy <- IncludeErrorDetailPolicy.Always
-        Log.Information("Configured HTTP to always include error details")
-        config
 
     let configureCors (config : HttpConfiguration) =
         let cors = Cors.EnableCorsAttribute("*","*","*")
@@ -45,7 +41,7 @@ module private ConfigurationHelpers =
 
     let registerConfiguration (config : HttpConfiguration) =
         config
-        |> configureLogging
+        |> Bristech.Srm.HttpConfig.Logging.configure
         |> configureCors
         |> configureRoutes
         |> configureSerializationFormatters

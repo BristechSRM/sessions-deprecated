@@ -116,4 +116,11 @@
     </Reference>
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bristech.Srm.HttpConfig\Bristech.Srm.HttpConfig.fsproj">
+      <Name>Bristech.Srm.HttpConfig</Name>
+      <Project>{b1d01b41-c530-469e-a2dc-b56ec02a7709}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
