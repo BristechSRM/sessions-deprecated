@@ -56,8 +56,8 @@
     <Compile Include="Cors.fs" />
     <Compile Include="Routes.fs" />
     <Compile Include="Serialization.fs" />
-    <Content Include="packages.config" />
     <Compile Include="Startup.fs" />
+    <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Owin">
