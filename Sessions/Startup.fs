@@ -8,12 +8,6 @@ open Serilog
 
 module private ConfigurationHelpers =
 
-    let configureCors (config : HttpConfiguration) =
-        let cors = Cors.EnableCorsAttribute("*","*","*")
-        config.EnableCors(cors)
-        Log.Information("Configured CORS to allow all ingress")
-        config
-
     let configureRoutes (config : HttpConfiguration) =
         let routes = config.Routes
         let route = routes.MapHttpRoute("DefaultApi", "{controller}/{id}")
@@ -42,7 +36,7 @@ module private ConfigurationHelpers =
     let registerConfiguration (config : HttpConfiguration) =
         config
         |> Bristech.Srm.HttpConfig.Logging.configure
-        |> configureCors
+        |> Bristech.Srm.HttpConfig.Cors.configure
         |> configureRoutes
         |> configureSerializationFormatters
 
