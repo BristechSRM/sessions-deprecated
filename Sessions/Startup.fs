@@ -8,13 +8,6 @@ open Serilog
 
 module private ConfigurationHelpers =
 
-    let configureRoutes (config : HttpConfiguration) =
-        let routes = config.Routes
-        let route = routes.MapHttpRoute("DefaultApi", "{controller}/{id}")
-        route.Defaults.Add("id", RouteParameter.Optional)
-        Log.Information("Configured API routing")
-        config
-
     let configureSerializationFormatters (config : HttpConfiguration) =
         config.Formatters.XmlFormatter.UseXmlSerializer <- true
 
@@ -37,7 +30,7 @@ module private ConfigurationHelpers =
         config
         |> Bristech.Srm.HttpConfig.Logging.configure
         |> Bristech.Srm.HttpConfig.Cors.configure
-        |> configureRoutes
+        |> Bristech.Srm.HttpConfig.Routes.configure
         |> configureSerializationFormatters
 
 type Startup() =

@@ -55,6 +55,7 @@
     <Compile Include="Logging.fs" />
     <Compile Include="Cors.fs" />
     <Content Include="packages.config" />
+    <Compile Include="Routes.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
