@@ -4,7 +4,6 @@ open Microsoft.Owin.Hosting
 open System.Threading
 open Logging
 open Serilog
-open Startup
 
 (*
     Note: When running this app from Visual studio / On Windows / Possibly with mono develop (Not checked)
@@ -23,7 +22,7 @@ let main _ =
     setupLogging()
 
     let baseAddress = "http://*:9000"
-    use server = WebApp.Start<Startup>(baseAddress)
+    use server = WebApp.Start<Bristech.Srm.HttpConfig.Startup>(baseAddress)
     Log.Information("Listening on {Address}", baseAddress)
 
     (*
