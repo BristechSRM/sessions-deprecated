@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Sessions", "Sessions\Sessions.fsproj", "{60A10B97-6CC9-4E6D-824E-79EBF9B326DC}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Bristech.Srm.HttpConfig", "Bristech.Srm.HttpConfig\Bristech.Srm.HttpConfig.fsproj", "{B1D01B41-C530-469E-A2DC-B56EC02A7709}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,14 +19,6 @@ Global
 		{60A10B97-6CC9-4E6D-824E-79EBF9B326DC}.Release|Any CPU.ActiveCfg = Release|x86
 		{60A10B97-6CC9-4E6D-824E-79EBF9B326DC}.Release|x86.ActiveCfg = Release|x86
 		{60A10B97-6CC9-4E6D-824E-79EBF9B326DC}.Release|x86.Build.0 = Release|x86
-		{B1D01B41-C530-469E-A2DC-B56EC02A7709}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1D01B41-C530-469E-A2DC-B56EC02A7709}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B1D01B41-C530-469E-A2DC-B56EC02A7709}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B1D01B41-C530-469E-A2DC-B56EC02A7709}.Debug|x86.Build.0 = Debug|Any CPU
-		{B1D01B41-C530-469E-A2DC-B56EC02A7709}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B1D01B41-C530-469E-A2DC-B56EC02A7709}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B1D01B41-C530-469E-A2DC-B56EC02A7709}.Release|x86.ActiveCfg = Release|Any CPU
-		{B1D01B41-C530-469E-A2DC-B56EC02A7709}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -47,6 +47,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Bristech.Srm.HttpConfig">
+      <HintPath>..\packages\Bristech.Srm.HttpConfig.0.1.1.0\lib\net45\Bristech.Srm.HttpConfig.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Dapper">
       <HintPath>..\packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
       <Private>True</Private>
@@ -114,12 +118,5 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Bristech.Srm.HttpConfig\Bristech.Srm.HttpConfig.fsproj">
-      <Name>Bristech.Srm.HttpConfig</Name>
-      <Project>{b1d01b41-c530-469e-a2dc-b56ec02a7709}</Project>
-      <Private>True</Private>
-    </ProjectReference>
   </ItemGroup>
 </Project>
