@@ -3,13 +3,16 @@
 open System
 open Dapper.Contrib.Extensions
 
+[<CLIMutable>]
 type SessionEntity = 
     { Id : Guid
       Title : string
       Status : string
       SpeakerId : Guid
       AdminId : Guid
-      ThreadId : Guid }
+      ThreadId : Guid
+      DateAdded : DateTime
+      Date : Nullable<DateTime> }
 
 [<CLIMutable>]
 type SessionSummaryEntity = 

@@ -16,14 +16,45 @@ open System.Data.SqlClient
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 let getConnection() = new MySqlConnection(connectionString)
 
+let convertToISO8601 (datetime: DateTime) =
+    datetime.ToString("yyyy-MM-ddTHH\:mm\:ss\Z")
 
-let entityToSessionDetail (entity : SessionEntity) : SessionDetail = 
+let entityToSession (entity: SessionEntity) : Session =
     { Id = entity.Id
       Title = entity.Title
       Status = entity.Status
+      Date =
+        if entity.Date.HasValue then
+            convertToISO8601 entity.Date.Value
+        else
+            ""
       SpeakerId = entity.SpeakerId
       AdminId = entity.AdminId
-      ThreadId = entity.ThreadId }
+      ThreadId = entity.ThreadId
+      DateAdded = convertToISO8601 entity.DateAdded }
+
+let convertToDateTime (iso : string) =
+    DateTime.Parse(iso, null, System.Globalization.DateTimeStyles.RoundtripKind)
+
+
+let sessionToEntity (session: Session) : SessionEntity =
+    { Id = session.Id
+      Title = session.Title
+      Status = session.Status
+      Date =
+        match session.Date with
+        | null -> Nullable()
+        | "" -> Nullable()
+        | _ -> Nullable(convertToDateTime session.Date)
+
+      SpeakerId = session.SpeakerId
+      AdminId = session.AdminId
+      ThreadId = session.ThreadId
+      DateAdded = 
+        match session.DateAdded with
+        | null -> DateTime.UtcNow
+        | "" -> DateTime.UtcNow
+        | _ -> convertToDateTime session.DateAdded }
 
 let getSessionSummaries() = 
     use connection = getConnection()
@@ -33,6 +64,15 @@ let getSessionSummaries() =
 
     connection.Close()
     result
+
+let getSessions() =
+    use connection = getConnection()
+    connection.Open()
+
+    let result = connection.Query<SessionEntity>("SELECT * FROM sessions")
+
+    connection.Close()
+    result |> Seq.map entityToSession
 
 type SessionSelectArgs = 
     { SessionId : Guid }
@@ -45,22 +85,22 @@ let getSession (id : Guid) =
     let sessions = connection.Query<SessionEntity>("SELECT * FROM sessions WHERE id = @SessionId", args)
     let result = 
         if Seq.isEmpty sessions then None
-        else Some(entityToSessionDetail (Seq.head sessions))
+        else Some(entityToSession (Seq.head sessions))
 
     connection.Close()
     result
 
-let createSession (sessionDetail : SessionDetail) = 
+let createSession (session : Session) = 
     use connection = getConnection()
     connection.Open()
     use transaction = connection.BeginTransaction()
 
     try
 
-        let args = { sessionDetail with Id = Guid.NewGuid() }
+        let args = { session with Id = Guid.NewGuid() } |> sessionToEntity
 
-        connection.Execute("insert into sessions(id, title, status, speakerId, adminId, threadId) values 
-            (@Id, @Title, @Status, @SpeakerId, @AdminId, @ThreadId)", args) |> ignore
+        connection.Execute("insert into sessions(id, title, status, date, speakerId, adminId, threadId, dateAdded) values 
+            (@Id, @Title, @Status, @Date, @SpeakerId, @AdminId, @ThreadId, @DateAdded)", args) |> ignore
 
         transaction.Commit()
         connection.Close()

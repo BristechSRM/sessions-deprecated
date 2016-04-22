@@ -19,15 +19,15 @@
                 "tags": [
                     "sessions"
                 ],
-                "summary": "Retrieves session summaries.",
-                "description": "The session summary details including session status, title, speaker identifier, and administrator identifier. rating\n",
+                "summary": "Retrieves sessions.",
+                "description": "The session details including status, title, admin, speaker and thread ids.",
                 "responses": {
                     "200": {
                         "description": "Successful response",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/SessionSummary"
+                                "$ref": "#/definitions/Session"
                             }
                         }
                     },
@@ -48,11 +48,11 @@
                 "parameters": [
                     {
                         "in": "body",
-                        "name": "body",
-                        "description": "New session details.",
+                        "name": "New session",
+                        "description": "Details of the session to be added",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/NewSessionDetail"
+                            "$ref": "#/definitions/NewSession"
                         }
                     }
                 ],
@@ -89,8 +89,8 @@
                 "tags": [
                     "sessions"
                 ],
-                "summary": "Retrieves the details of the specified session.",
-                "description": "The full session details are retrieved.",
+                "summary": "Retrieves a session.",
+                "description": "The session with the specified id is retrieved.",
                 "parameters": [
                     {
                         "in": "path",
@@ -105,7 +105,7 @@
                     "200": {
                         "description": "The session is found.",
                         "schema": {
-                            "$ref": "#/definitions/SessionDetail"
+                            "$ref": "#/definitions/Session"
                         }
                     },
                     "404": {
@@ -119,47 +119,13 @@
         }
     },
     "definitions": {
-        "SessionSummary": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "format": "guid",
-                    "description": "Unique identifier."
-                },
-                "title": {
-                    "type": "string",
-                    "description": "The title of the session"
-                },
-                "status": {
-                    "type": "string",
-                    "description": "Current status of the session.",
-                    "enum": [
-                        "unassigned",
-                        "assigned",
-                        "in-progress",
-                        "deferred",
-                        "topic-approved",
-                        "date-assigned"
-                    ]
-                },
-                "speakerId": {
-                    "type": "string",
-                    "format": "guid",
-                    "description": "The unique identifier of the speaker for the session"
-                },
-                "adminId": {
-                    "type": "string",
-                    "format": "guid",
-                    "description": "The unique identifier of the administrator for the session"
-                }
-            }
-        },
-        "SessionDetail": {
+        "Session": {
             "type": "object",
             "required": [
                 "id",
-                "title"
+                "status",
+                "speakerId",
+                "dateAdded"
             ],
             "properties": {
                 "id": {
@@ -183,6 +149,11 @@
                         "date-assigned"
                     ]
                 },
+                "date": {
+                    "type": "string",
+                    "format": "ISO 8601",
+                    "description": "The date the session will take place."
+                },
                 "speakerId": {
                     "type": "string",
                     "format": "guid",
@@ -197,13 +168,19 @@
                     "type": "string",
                     "format": "guid",
                     "description": "The unique identifier of any session conversation thread."
+                },
+                "dateAdded": {
+                    "type": "string",
+                    "format": "ISO 8601",
+                    "description": "The date the session was added."
                 }
             }
         },
-        "NewSessionDetail": {
+        "NewSession": {
             "type": "object",
             "required": [
-                "title"
+                "status",
+                "speakerId"
             ],
             "properties": {
                 "title": {
@@ -221,6 +198,11 @@
                         "topic-approved",
                         "date-assigned"
                     ]
+                },
+                "date": {
+                    "type": "string",
+                    "format": "ISO 8601",
+                    "description": "The date the session will take place"
                 },
                 "speakerId": {
                     "type": "string",
@@ -288,14 +270,9 @@
             }
         },
         "Created": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "format": "guid",
-                    "description": "The unique identifier for the resource"
-                }
-            }
+            "type": "string",
+            "format": "guid",
+            "description": "The unique identifier for the resource"
         }
     }
 }
