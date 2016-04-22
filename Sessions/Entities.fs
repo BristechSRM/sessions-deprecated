@@ -19,9 +19,14 @@ type SessionSummaryEntity =
     { Id : Guid
       Title : string
       Status : string
-      SpeakerName : string
+      SpeakerId : Guid
+      SpeakerForename : string
+      SpeakerSurname : string
+      SpeakerImageUrl : string
       SpeakerRating : int
-      AdminName : string
+      AdminId : Guid
+      AdminForename : string
+      AdminSurname : string
       AdminImageUrl : string
       ThreadId: Guid }
 
