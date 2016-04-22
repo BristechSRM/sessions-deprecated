@@ -16,10 +16,10 @@ open System.Data.SqlClient
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 let getConnection() = new MySqlConnection(connectionString)
 
-let convertToISO8601 (datetime: DateTime) =
+let convertToISO8601 (datetime : DateTime) =
     datetime.ToString("yyyy-MM-ddTHH\:mm\:ss\Z")
 
-let entityToSession (entity: SessionEntity) : Session =
+let entityToSession (entity : SessionEntity) : Session =
     { Id = entity.Id
       Title = entity.Title
       Status = entity.Status
@@ -33,11 +33,11 @@ let entityToSession (entity: SessionEntity) : Session =
       ThreadId = entity.ThreadId
       DateAdded = convertToISO8601 entity.DateAdded }
 
-let convertToDateTime (iso : string) =
+let convertToDateTime iso =
     DateTime.Parse(iso, null, System.Globalization.DateTimeStyles.RoundtripKind)
 
 
-let sessionToEntity (session: Session) : SessionEntity =
+let sessionToEntity (session : Session) : SessionEntity =
     { Id = session.Id
       Title = session.Title
       Status = session.Status
