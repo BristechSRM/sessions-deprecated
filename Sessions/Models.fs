@@ -13,16 +13,17 @@ type ServerError =
       Message : string }
 
 [<CLIMutable>]
-type SessionDetail = {
-    Id : Guid
-    Title : string
-    [<JsonProperty(Required = Required.Always)>]
-    Status: String
-    [<JsonProperty(Required = Required.Always)>]
-    SpeakerId : Guid
-    AdminId: Guid
-    ThreadId: Guid
-}
+type Session =
+    { Id : Guid
+      Title : string
+      [<JsonProperty(Required = Required.Always)>]
+      Status : string
+      Date : string
+      [<JsonProperty(Required = Required.Always)>]
+      SpeakerId : Guid
+      AdminId : Guid
+      ThreadId : Guid
+      DateAdded : string }
 
 type Rating = 
     | Zero = 0
