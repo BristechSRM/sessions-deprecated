@@ -54,10 +54,10 @@ let getProfile (profileId : Guid) =
         connection.Close()
         Failure { HttpStatus = HttpStatusCode.BadRequest
                   Message = ex.Message }
-    | _ -> 
+    | ex -> 
         connection.Close()
         Failure { HttpStatus = HttpStatusCode.InternalServerError
-                  Message = "Internal Server Error" }
+                  Message = "Unhandled error: " + ex.Message }
 
 let addProfile (profile : Profile) = 
     let newId = Guid.NewGuid()
