@@ -82,10 +82,10 @@ let getSessionSummary (id : Guid) =
     connection.Open()
 
     let args = { SessionId = id }
-    let sessions = connection.Query<SessionEntity>("SELECT * FROM session_summaries WHERE id = @SessionId", args)
+    let sessions = connection.Query<SessionSummaryEntity>("SELECT * FROM session_summaries WHERE id = @SessionId", args)
     let result = 
         if Seq.isEmpty sessions then None
-        else Some(entityToSession (Seq.head sessions))
+        else Some(Seq.head sessions)
 
     connection.Close()
     result
