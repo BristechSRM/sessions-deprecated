@@ -33,16 +33,15 @@ type SessionSummaryEntity =
 
 [<Table("profiles")>]
 type ProfileEntity = 
-    { [<Key>]
-      Id : Guid
+    { Id : Guid
       Forename : string
       Surname : string
       Rating : int
       ImageUrl : string }
 
+[<CLIMutable>]
 type HandleEntity = 
-    { [<Key>]
-      ProfileId : Guid 
+    { ProfileId : Guid 
       Type : string
       Identifier : string }
 
