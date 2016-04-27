@@ -20,6 +20,7 @@ type SessionSummaryEntity =
       Title : string
       Status : string
       Date : Nullable<DateTime>
+      DateAdded : DateTime
       SpeakerId : Guid
       SpeakerForename : string
       SpeakerSurname : string
