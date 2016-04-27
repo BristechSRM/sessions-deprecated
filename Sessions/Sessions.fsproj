@@ -48,8 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Bristech.Srm.HttpConfig">
-      <HintPath>..\packages\Bristech.Srm.HttpConfig.0.1.1.0\lib\net45\Bristech.Srm.HttpConfig.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Bristech.Srm.HttpConfig.0.1.4\lib\net45\Bristech.Srm.HttpConfig.dll</HintPath>
     </Reference>
     <Reference Include="Dapper">
       <HintPath>..\packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
