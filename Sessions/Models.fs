@@ -23,7 +23,7 @@ type Session =
       SpeakerId : Guid
       AdminId : Guid
       ThreadId : Guid
-      DateAdded : string }
+      DateAdded : DateTime option }
 
 type Rating = 
     | Zero = 0

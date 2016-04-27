@@ -31,7 +31,7 @@ let entityToSession (entity : SessionEntity) : Session =
       SpeakerId = entity.SpeakerId
       AdminId = entity.AdminId
       ThreadId = entity.ThreadId
-      DateAdded = convertToISO8601 entity.DateAdded }
+      DateAdded = Some entity.DateAdded }
 
 let convertToDateTime iso =
     DateTime.Parse(iso, null, System.Globalization.DateTimeStyles.RoundtripKind)
@@ -52,9 +52,8 @@ let sessionToEntity (session : Session) : SessionEntity =
       ThreadId = session.ThreadId
       DateAdded = 
         match session.DateAdded with
-        | null -> DateTime.UtcNow
-        | "" -> DateTime.UtcNow
-        | _ -> convertToDateTime session.DateAdded }
+        | None -> DateTime.UtcNow
+        | Some date -> date }
 
 let getSessionSummaries() = 
     use connection = getConnection()
