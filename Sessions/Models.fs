@@ -18,7 +18,7 @@ type Session =
       Title : string
       [<JsonProperty(Required = Required.Always)>]
       Status : string
-      Date : string
+      Date : DateTime option
       [<JsonProperty(Required = Required.Always)>]
       SpeakerId : Guid
       AdminId : Guid

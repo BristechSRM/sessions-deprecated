@@ -25,9 +25,9 @@ let entityToSession (entity : SessionEntity) : Session =
       Status = entity.Status
       Date =
         if entity.Date.HasValue then
-            convertToISO8601 entity.Date.Value
+            Some entity.Date.Value
         else
-            ""
+            None
       SpeakerId = entity.SpeakerId
       AdminId = entity.AdminId
       ThreadId = entity.ThreadId
@@ -43,9 +43,8 @@ let sessionToEntity (session : Session) : SessionEntity =
       Status = session.Status
       Date =
         match session.Date with
-        | null -> Nullable()
-        | "" -> Nullable()
-        | _ -> Nullable(convertToDateTime session.Date)
+        | None -> Nullable()
+        | Some date -> Nullable(date)
 
       SpeakerId = session.SpeakerId
       AdminId = session.AdminId
