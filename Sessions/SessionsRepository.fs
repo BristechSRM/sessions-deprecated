@@ -16,36 +16,21 @@ open System.Data.SqlClient
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 let getConnection() = new MySqlConnection(connectionString)
 
-let convertToISO8601 (datetime : DateTime) =
-    datetime.ToString("yyyy-MM-ddTHH\:mm\:ss\Z")
-
 let entityToSession (entity : SessionEntity) : Session =
     { Id = entity.Id
       Title = entity.Title
       Status = entity.Status
-      Date =
-        if entity.Date.HasValue then
-            Some entity.Date.Value
-        else
-            None
+      Date = Option.ofNullable entity.Date
       SpeakerId = entity.SpeakerId
       AdminId = entity.AdminId
       ThreadId = entity.ThreadId
       DateAdded = Some entity.DateAdded }
 
-let convertToDateTime iso =
-    DateTime.Parse(iso, null, System.Globalization.DateTimeStyles.RoundtripKind)
-
-
 let sessionToEntity (session : Session) : SessionEntity =
     { Id = session.Id
       Title = session.Title
       Status = session.Status
-      Date =
-        match session.Date with
-        | None -> Nullable()
-        | Some date -> Nullable(date)
-
+      Date = session.Date |> Option.toNullable
       SpeakerId = session.SpeakerId
       AdminId = session.AdminId
       ThreadId = session.ThreadId
