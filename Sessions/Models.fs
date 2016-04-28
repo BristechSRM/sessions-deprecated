@@ -18,12 +18,12 @@ type Session =
       Title : string
       [<JsonProperty(Required = Required.Always)>]
       Status : string
-      Date : string
+      Date : DateTime option
       [<JsonProperty(Required = Required.Always)>]
       SpeakerId : Guid
       AdminId : Guid
       ThreadId : Guid
-      DateAdded : string }
+      DateAdded : DateTime option }
 
 type Rating = 
     | Zero = 0
