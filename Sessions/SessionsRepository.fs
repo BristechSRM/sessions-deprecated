@@ -16,8 +16,6 @@ open System.Data.SqlClient
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 let getConnection() = new MySqlConnection(connectionString)
 
-let emptyGuid = new Guid("00000000000000000000000000000000")
-
 let entityToSession (entity : SessionSummaryEntity) : Session =
     let speaker =
         { Id = entity.SpeakerId
@@ -26,7 +24,7 @@ let entityToSession (entity : SessionSummaryEntity) : Session =
           Rating = enum<Rating> entity.SpeakerRating
           ImageUri = entity.SpeakerImageUrl }
     let admin =
-        if entity.AdminId = emptyGuid then None
+        if entity.AdminId = Guid.Empty then None
         else Some { AdminSummary.Id = entity.AdminId
                     Forename = entity.AdminForename
                     Surname = entity.AdminSurname
