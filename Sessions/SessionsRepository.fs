@@ -16,6 +16,30 @@ open System.Data.SqlClient
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 let getConnection() = new MySqlConnection(connectionString)
 
+let emptyGuid = new Guid("00000000000000000000000000000000")
+
+let entityToSession (entity : SessionSummaryEntity) : Session =
+    let speaker =
+        { Id = entity.SpeakerId
+          Forename = entity.SpeakerForename
+          Surname = entity.SpeakerSurname
+          Rating = enum<Rating> entity.SpeakerRating
+          ImageUri = entity.SpeakerImageUrl }
+    let admin =
+        if entity.AdminId = emptyGuid then None
+        else Some { AdminSummary.Id = entity.AdminId
+                    Forename = entity.AdminForename
+                    Surname = entity.AdminSurname
+                    ImageUri = entity.AdminImageUrl }
+    { Id = entity.Id
+      Title = entity.Title
+      Status = entity.Status
+      Date = Option.ofNullable entity.Date
+      DateAdded = entity.DateAdded
+      ThreadId = entity.ThreadId
+      Speaker = speaker
+      Admin = admin }
+
 let sessionToEntity (session : NewSession) : SessionEntity =
     { Id = session.Id
       Title = session.Title
@@ -36,7 +60,7 @@ let getSessions() =
     let result = connection.Query<SessionSummaryEntity>("SELECT * FROM session_summaries")
 
     connection.Close()
-    result
+    result |> Seq.map entityToSession
 
 type SessionSelectArgs = 
     { SessionId : Guid }
@@ -49,7 +73,7 @@ let getSession (id : Guid) =
     let sessions = connection.Query<SessionSummaryEntity>("SELECT * FROM session_summaries WHERE id = @SessionId", args)
     let result = 
         if Seq.isEmpty sessions then None
-        else Some(Seq.head sessions)
+        else sessions |> Seq.head |> entityToSession |> Some
 
     connection.Close()
     result
