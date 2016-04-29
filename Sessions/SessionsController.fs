@@ -12,10 +12,9 @@ type SessionsController() =
     inherit ApiController()
 
     member x.Get() =
-        Log.Information("Received GET request for sessions")
+        Log.Information("Received GET request for all sessions")
         let sessions = getSessions()
         x.Request.CreateResponse(sessions)
-
 
     member x.Get(id: Guid) =
         Log.Information("Received GET request for a session with id {id}", id)
@@ -24,7 +23,7 @@ type SessionsController() =
         | Some session -> x.Request.CreateResponse(session)
         | None -> x.Request.CreateResponse(HttpStatusCode.NotFound)
 
-    member x.Post(newSessionDetail : Session) = 
+    member x.Post(newSessionDetail : NewSession) = 
         Log.Information("Received POST request for new session: {@SessionDetail}", newSessionDetail)
         match SessionsRepository.createSession newSessionDetail with
         | Success sessionId -> x.Request.CreateResponse(HttpStatusCode.Created, sessionId)
