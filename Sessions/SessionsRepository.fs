@@ -16,6 +16,27 @@ open System.Data.SqlClient
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 let getConnection() = new MySqlConnection(connectionString)
 
+let sessionSummarySql = """SELECT 
+        `s`.`id` AS `id`,
+        `s`.`title` AS `title`,
+        `s`.`status` AS `status`,
+        `s`.`speakerId` AS `speakerId`,
+        `s`.`date` AS `date`,
+        `s`.`dateAdded` AS `dateAdded`,
+        `sp`.`forename` AS `speakerForename`,
+        `sp`.`surname` AS `speakerSurname`,
+        `sp`.`imageUrl` AS `speakerImageUrl`,
+        `sp`.`rating` AS `speakerRating`,
+        `s`.`adminId` AS `adminId`,
+        `a`.`forename` AS `adminForename`,
+        `a`.`surname` AS `adminSurname`,
+        `a`.`imageUrl` AS `adminImageUrl`,
+        `s`.`threadId` AS `threadId`
+    FROM
+        ((`sessions` `s`
+        LEFT JOIN `profiles` `sp` ON ((`sp`.`id` = `s`.`speakerId`)))
+        LEFT JOIN `profiles` `a` ON ((`a`.`id` = `s`.`adminId`)))"""
+
 let entityToSession (entity : SessionSummaryEntity) : Session =
     let speaker =
         { Id = entity.SpeakerId
@@ -55,7 +76,7 @@ let getSessions() =
     use connection = getConnection()
     connection.Open()
 
-    let result = connection.Query<SessionSummaryEntity>("SELECT * FROM session_summaries")
+    let result = connection.Query<SessionSummaryEntity>(sessionSummarySql)
 
     connection.Close()
     result |> Seq.map entityToSession
@@ -68,7 +89,7 @@ let getSession (id : Guid) =
     connection.Open()
 
     let args = { SessionId = id }
-    let sessions = connection.Query<SessionSummaryEntity>("SELECT * FROM session_summaries WHERE id = @SessionId", args)
+    let sessions = connection.Query<SessionSummaryEntity>(sessionSummarySql + " WHERE `s`.`id` = @SessionId", args)
     let result = 
         if Seq.isEmpty sessions then None
         else sessions |> Seq.head |> entityToSession |> Some
