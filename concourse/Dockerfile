@@ -2,7 +2,7 @@ FROM mono
 
 COPY binaries/ service/ 
 
-EXPOSE 9000
+EXPOSE 8080 
 
 CMD ["mono", "service/Sessions.exe"]
 
