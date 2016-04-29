@@ -13,7 +13,7 @@ type ServerError =
       Message : string }
 
 [<CLIMutable>]
-type Session =
+type NewSession =
     { Id : Guid
       Title : string
       [<JsonProperty(Required = Required.Always)>]

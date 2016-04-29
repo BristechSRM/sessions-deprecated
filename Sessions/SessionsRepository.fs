@@ -37,17 +37,7 @@ let sessionSummarySql = """SELECT
         LEFT JOIN `profiles` `sp` ON ((`sp`.`id` = `s`.`speakerId`)))
         LEFT JOIN `profiles` `a` ON ((`a`.`id` = `s`.`adminId`)))"""
 
-let entityToSession (entity : SessionEntity) : Session =
-    { Id = entity.Id
-      Title = entity.Title
-      Status = entity.Status
-      Date = Option.ofNullable entity.Date
-      SpeakerId = entity.SpeakerId
-      AdminId = entity.AdminId
-      ThreadId = entity.ThreadId
-      DateAdded = Some entity.DateAdded }
-
-let sessionToEntity (session : Session) : SessionEntity =
+let sessionToEntity (session : NewSession) : SessionEntity =
     { Id = session.Id
       Title = session.Title
       Status = session.Status
@@ -60,7 +50,7 @@ let sessionToEntity (session : Session) : SessionEntity =
         | None -> DateTime.UtcNow
         | Some date -> date }
 
-let getSessionSummaries() = 
+let getSessions() = 
     use connection = getConnection()
     connection.Open()
 
@@ -69,19 +59,10 @@ let getSessionSummaries() =
     connection.Close()
     result
 
-let getSessions() =
-    use connection = getConnection()
-    connection.Open()
-
-    let result = connection.Query<SessionEntity>("SELECT * FROM sessions")
-
-    connection.Close()
-    result |> Seq.map entityToSession
-
 type SessionSelectArgs = 
     { SessionId : Guid }
 
-let getSessionSummary (id : Guid) =
+let getSession (id : Guid) =
     use connection = getConnection()
     connection.Open()
 
@@ -94,20 +75,7 @@ let getSessionSummary (id : Guid) =
     connection.Close()
     result
 
-let getSession (id : Guid) = 
-    use connection = getConnection()
-    connection.Open()
-
-    let args = { SessionId = id }
-    let sessions = connection.Query<SessionEntity>("SELECT * FROM sessions WHERE id = @SessionId", args)
-    let result = 
-        if Seq.isEmpty sessions then None
-        else Some(entityToSession (Seq.head sessions))
-
-    connection.Close()
-    result
-
-let createSession (session : Session) = 
+let createSession (session : NewSession) = 
     use connection = getConnection()
     connection.Open()
     use transaction = connection.BeginTransaction()
