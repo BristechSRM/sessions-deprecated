@@ -71,6 +71,7 @@ type Profile =
       Surname : string
       Rating : Rating
       ImageUrl : string
+      Bio : string
       Handles : Handle seq }
 
 

@@ -41,7 +41,8 @@ type ProfileEntity =
       Forename : string
       Surname : string
       Rating : int
-      ImageUrl : string }
+      ImageUrl : string
+      Bio : string }
 
 [<CLIMutable>]
 type HandleEntity = 
