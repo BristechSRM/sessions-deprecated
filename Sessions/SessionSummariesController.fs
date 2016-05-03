@@ -12,8 +12,11 @@ type SessionSummariesController() =
 
     member x.Get() =
         Log.Information("Received GET request for all sessions")
-        let sessions = getSessionSummaries()
-        x.Request.CreateResponse(sessions)
+        try 
+            let sessions = getSessionSummaries()
+            x.Request.CreateResponse(sessions)
+        with
+            | ex -> x.Request.CreateResponse(ex.Message)
 
     member x.Get(id: Guid) =
         Log.Information("Received GET request for a session with id {id}", id)
