@@ -7,6 +7,7 @@ open Dapper.Contrib.Extensions
 type SessionEntity = 
     { Id : Guid
       Title : string
+      Description : string
       Status : string
       SpeakerId : Guid
       AdminId : Guid
@@ -18,6 +19,7 @@ type SessionEntity =
 type SessionSummaryEntity = 
     { Id : Guid
       Title : string
+      Description : string
       Status : string
       Date : Nullable<DateTime>
       DateAdded : DateTime
@@ -26,6 +28,7 @@ type SessionSummaryEntity =
       SpeakerSurname : string
       SpeakerImageUrl : string
       SpeakerRating : int
+      SpeakerBio : string
       AdminId : Guid
       AdminForename : string
       AdminSurname : string

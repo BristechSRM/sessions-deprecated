@@ -19,6 +19,7 @@ let getConnection() = new MySqlConnection(connectionString)
 let sessionSummarySql = """SELECT 
         `s`.`id` AS `id`,
         `s`.`title` AS `title`,
+        `s`.`description` AS `description`,
         `s`.`status` AS `status`,
         `s`.`speakerId` AS `speakerId`,
         `s`.`date` AS `date`,
@@ -27,6 +28,7 @@ let sessionSummarySql = """SELECT
         `sp`.`surname` AS `speakerSurname`,
         `sp`.`imageUrl` AS `speakerImageUrl`,
         `sp`.`rating` AS `speakerRating`,
+        `sp`.`bio` AS `speakerBio`,
         `s`.`adminId` AS `adminId`,
         `a`.`forename` AS `adminForename`,
         `a`.`surname` AS `adminSurname`,
@@ -43,7 +45,8 @@ let entityToSession (entity : SessionSummaryEntity) : Session =
           Forename = entity.SpeakerForename
           Surname = entity.SpeakerSurname
           Rating = enum entity.SpeakerRating
-          ImageUri = entity.SpeakerImageUrl }
+          ImageUri = entity.SpeakerImageUrl
+          Bio = entity.SpeakerBio }
     let admin =
         if entity.AdminId = Guid.Empty then None
         else Some { AdminSummary.Id = entity.AdminId
@@ -52,6 +55,7 @@ let entityToSession (entity : SessionSummaryEntity) : Session =
                     ImageUri = entity.AdminImageUrl }
     { Id = entity.Id
       Title = entity.Title
+      Description = entity.Description
       Status = entity.Status
       Date = Option.ofNullable entity.Date
       DateAdded = entity.DateAdded
@@ -62,6 +66,7 @@ let entityToSession (entity : SessionSummaryEntity) : Session =
 let sessionToEntity (session : NewSession) : SessionEntity =
     { Id = session.Id
       Title = session.Title
+      Description = session.Description
       Status = session.Status
       Date = session.Date |> Option.toNullable
       SpeakerId = session.SpeakerId
