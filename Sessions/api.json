@@ -124,7 +124,7 @@
             "required": [
                 "id",
                 "status",
-                "speakerId",
+                "speaker",
                 "dateAdded"
             ],
             "properties": {
@@ -154,15 +154,11 @@
                     "format": "ISO 8601",
                     "description": "The date the session will take place."
                 },
-                "speakerId": {
-                    "type": "string",
-                    "format": "guid",
-                    "description": "The unique identifier of the session speaker."
+                "speaker": {
+                    "$ref": "#/definitions/SpeakerSummary"
                 },
-                "adminId": {
-                    "type": "string",
-                    "format": "guid",
-                    "description": "The unique identifier of the session administrator."
+                "admin": {
+                    "$ref": "#/definitions/AdminSummary"
                 },
                 "threadId": {
                     "type": "string",
@@ -218,6 +214,62 @@
                     "type": "string",
                     "format": "guid",
                     "description": "The unique identifier of any session conversation thread."
+                }
+            }
+        },
+        "SpeakerSummary": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "guid",
+                    "description": "The speaker's unique identifier"
+                },
+                "forename": {
+                    "type": "string",
+                    "description": "The speaker's forename"
+                },
+                "surname": {
+                    "type": "string",
+                    "description": "The speaker's surname"
+                },
+                "rating": {
+                    "type": "integer",
+                    "description": "The speaker's credibility rating"
+                },
+                "imageUri": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "The uri of the speaker's image"
+                }
+            }
+        },
+        "AdminSummary": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "guid",
+                    "description": "The admin's unique identifier"
+                },
+                "forename": {
+                    "type": "string",
+                    "description": "The admin's forename"
+                },
+                "surname": {
+                    "type": "string",
+                    "description": "The admin's surname"
+                },
+                "imageUri": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "The uri of the admin's image"
                 }
             }
         },

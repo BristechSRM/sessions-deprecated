@@ -12,6 +12,37 @@ type ServerError =
     { HttpStatus : HttpStatusCode
       Message : string }
 
+type Rating = 
+    | Zero = 0
+    | One = 1
+    | Two = 2
+    | Three = 3
+    | Four = 4
+    | Five = 5
+
+type SpeakerSummary =
+    { Id : Guid
+      Forename : string
+      Surname : string
+      Rating : Rating
+      ImageUri : string }
+
+type AdminSummary =
+    { Id : Guid
+      Forename : string
+      Surname : string
+      ImageUri : string }
+
+type Session =
+    { Id : Guid
+      Title : string
+      Status : string
+      Date : DateTime option
+      DateAdded : DateTime
+      Speaker : SpeakerSummary
+      Admin : AdminSummary option
+      ThreadId : Guid }
+
 [<CLIMutable>]
 type NewSession =
     { Id : Guid
@@ -24,14 +55,6 @@ type NewSession =
       AdminId : Guid
       ThreadId : Guid
       DateAdded : DateTime option }
-
-type Rating = 
-    | Zero = 0
-    | One = 1
-    | Two = 2
-    | Three = 3
-    | Four = 4
-    | Five = 5
 
 [<CLIMutable>]
 type Handle = 

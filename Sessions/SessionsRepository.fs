@@ -37,6 +37,28 @@ let sessionSummarySql = """SELECT
         LEFT JOIN `profiles` `sp` ON ((`sp`.`id` = `s`.`speakerId`)))
         LEFT JOIN `profiles` `a` ON ((`a`.`id` = `s`.`adminId`)))"""
 
+let entityToSession (entity : SessionSummaryEntity) : Session =
+    let speaker =
+        { Id = entity.SpeakerId
+          Forename = entity.SpeakerForename
+          Surname = entity.SpeakerSurname
+          Rating = enum entity.SpeakerRating
+          ImageUri = entity.SpeakerImageUrl }
+    let admin =
+        if entity.AdminId = Guid.Empty then None
+        else Some { AdminSummary.Id = entity.AdminId
+                    Forename = entity.AdminForename
+                    Surname = entity.AdminSurname
+                    ImageUri = entity.AdminImageUrl }
+    { Id = entity.Id
+      Title = entity.Title
+      Status = entity.Status
+      Date = Option.ofNullable entity.Date
+      DateAdded = entity.DateAdded
+      ThreadId = entity.ThreadId
+      Speaker = speaker
+      Admin = admin }
+
 let sessionToEntity (session : NewSession) : SessionEntity =
     { Id = session.Id
       Title = session.Title
@@ -57,7 +79,7 @@ let getSessions() =
     let result = connection.Query<SessionSummaryEntity>(sessionSummarySql)
 
     connection.Close()
-    result
+    result |> Seq.map entityToSession
 
 type SessionSelectArgs = 
     { SessionId : Guid }
@@ -70,7 +92,7 @@ let getSession (id : Guid) =
     let sessions = connection.Query<SessionSummaryEntity>(sessionSummarySql + " WHERE `s`.`id` = @SessionId", args)
     let result = 
         if Seq.isEmpty sessions then None
-        else Some(Seq.head sessions)
+        else sessions |> Seq.head |> entityToSession |> Some
 
     connection.Close()
     result
