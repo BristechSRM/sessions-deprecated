@@ -32,7 +32,7 @@ resources:
     email: {{docker-hub-email}}
     username: bristechsrm
     password: {{docker-hub-password}}
-    repository: bristechsrm/comms-swarm-test
+    repository: bristechsrm/sessions-swarm-test
 
 - name: swarm
   type: docker-swarm-deploy
