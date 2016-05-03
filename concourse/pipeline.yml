@@ -42,3 +42,5 @@ resources:
     repository: bristechsrm/sessions-swarm-test
     swarmMasterIp: {{swarmMasterIp}}
     overlay: overlay
+    accessKeyId: {{awsAccessKeyId}}
+    secretAccessKey: {{awsSecretAccessKey}}
