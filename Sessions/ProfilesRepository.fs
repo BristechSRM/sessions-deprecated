@@ -28,6 +28,7 @@ let entityToModel (entity : ProfileEntity) handles : Profile =
       Surname = entity.Surname
       Rating = enum entity.Rating
       ImageUrl = entity.ImageUrl
+      Bio = entity.Bio
       Handles = handles |> Seq.map handleEntityToModel }
 
 let modelToEntity (model : Profile) : ProfileEntity = 
@@ -35,7 +36,8 @@ let modelToEntity (model : Profile) : ProfileEntity =
       Forename = model.Forename
       Surname = model.Surname
       Rating = (int) model.Rating
-      ImageUrl = model.ImageUrl }
+      ImageUrl = model.ImageUrl
+      Bio = model.Bio }
 
 type IdWrapper = 
     { Id : Guid }

@@ -25,7 +25,8 @@ type SpeakerSummary =
       Forename : string
       Surname : string
       Rating : Rating
-      ImageUri : string }
+      ImageUri : string
+      Bio : string }
 
 type AdminSummary =
     { Id : Guid
@@ -36,6 +37,7 @@ type AdminSummary =
 type Session =
     { Id : Guid
       Title : string
+      Description : string
       Status : string
       Date : DateTime option
       DateAdded : DateTime
@@ -47,6 +49,7 @@ type Session =
 type NewSession =
     { Id : Guid
       Title : string
+      Description : string
       [<JsonProperty(Required = Required.Always)>]
       Status : string
       Date : DateTime option
@@ -68,6 +71,7 @@ type Profile =
       Surname : string
       Rating : Rating
       ImageUrl : string
+      Bio : string
       Handles : Handle seq }
 
 
