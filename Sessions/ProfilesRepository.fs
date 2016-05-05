@@ -1,6 +1,7 @@
 ﻿module ProfilesRepository
 
 open System
+open System.Collections.Generic
 open System.Net
 open Dapper
 open Dapper.Contrib.Extensions
@@ -9,6 +10,7 @@ open System.Data.SqlClient
 open MySql.Data.MySqlClient
 open Models
 open Entities
+open Serilog
 
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 let getConnection() = new MySqlConnection(connectionString)
@@ -87,3 +89,44 @@ let addProfile (profile : Profile) =
         connection.Close()
         Failure { HttpStatus = HttpStatusCode.InternalServerError
                   Message = "Internal Server Error" }
+
+
+let getHandles : Result<IEnumerable<HandleEntity>,ServerError> = 
+    use connection = getConnection()
+    connection.Open()
+    try
+        let handles = connection.Query<HandleEntity>("select profileId, type, identifier from handles order by type, identifier")
+        handles 
+        |> Success
+    with
+    | :? SqlException as sqlex -> 
+        Log.Warning("getHandles() - SqlException: {0}", sqlex)
+        Failure { HttpStatus = HttpStatusCode.BadRequest
+                  Message = sqlex.Message }
+    | ex ->
+        Log.Warning("getHandles() - Exception: {0}", ex)
+        Failure { HttpStatus = HttpStatusCode.BadRequest
+                  Message = ex.Message }
+
+
+let getHandle (handletype : string)(identifier : string) = 
+    use connection = getConnection()
+    connection.Open()
+    try
+        let cmd = String.Format("select profileId, type, identifier from handles where type = '{0}' and identifier = '{1}'", handletype, identifier)
+        let handles = connection.Query(cmd)
+        if not ( Seq.isEmpty handles ) then 
+            handles |> Seq.head |> Success
+        else Failure {
+            HttpStatus = HttpStatusCode.NotFound
+            Message = "" }
+    with
+    | :? SqlException as sqlex -> 
+        Log.Warning("getHandle() - SqlException: {0}", sqlex)
+        Failure { HttpStatus = HttpStatusCode.BadRequest
+                  Message = sqlex.Message }
+    | ex ->
+        Log.Warning("getHandle() - Exception: {0}", ex)
+        Failure { HttpStatus = HttpStatusCode.BadRequest
+                  Message = ex.Message }
+
