@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "Sessions",
-        "description": "Retrieve details about Bristech Sessions",
+        "title": "Events",
+        "description": "Retrieve details about Bristech events/sessions/speakers/admins",
         "version": "1.0.0"
     },
     "host": "api.bris.tech",
@@ -17,7 +17,7 @@
         "/sessions": {
             "get": {
                 "tags": [
-                    "sessions"
+                    "events"
                 ],
                 "summary": "Retrieves sessions.",
                 "description": "The session details including status, title, admin, speaker and thread ids.",
@@ -41,7 +41,7 @@
             },
             "post": {
                 "tags": [
-                    "sessions"
+                    "events"
                 ],
                 "summary": "Adds a new session",
                 "description": "Creates a new session assigning a unique identifier",
@@ -87,7 +87,7 @@
         "/sessions/{sessionId}": {
             "get": {
                 "tags": [
-                    "sessions"
+                    "events"
                 ],
                 "summary": "Retrieves a session.",
                 "description": "The session with the specified id is retrieved.",
@@ -110,6 +110,108 @@
                     },
                     "404": {
                         "description": "The session does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/speakers/{speakerId}": {
+            "get": {
+                "tags": [
+                    "events"
+                ],
+                "summary": "Retrieves details of a speaker",
+                "description": "The speaker details",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "speakerId",
+                        "description": "The speaker identifier",
+                        "required": true,
+                        "type": "string",
+                        "format": "guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The speaker was found.",
+                        "schema": {
+                            "$ref": "#/definitions/Speaker"
+                        }
+                    },
+                    "404": {
+                        "description": "The speaker was not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/admins/{adminId}": {
+            "get": {
+                "tags": [
+                    "events"
+                ],
+                "summary": "Retrieves details of an admin",
+                "description": "The admin details",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "adminId",
+                        "description": "The admin identifier",
+                        "required": true,
+                        "type": "string",
+                        "format": "guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The admin was found.",
+                        "schema": {
+                            "$ref": "#/definitions/Admin"
+                        }
+                    },
+                    "404": {
+                        "description": "The admin was not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/handles": {
+            "get": {
+                "summary": "Retrieves handle information for specified type and identifier (e.g. type=email, identifier=foo@bar.com). Handles must be unique across both speakers and admins.",
+                "description": "The handle detail",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "type",
+                        "type": "string",
+                        "required": true,
+                        "description": "The type of the handle (e.g. email, meetup etc.)"
+                    },
+                    {
+                        "in": "query",
+                        "name": "identifier",
+                        "type": "string",
+                        "required": true,
+                        "description": "The identifier for the handle (e.g. foo@bar.com)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The handle was found",
+                        "schema": {
+                            "$ref": "#/definitions/Handle"
+                        }
+                    },
+                    "404": {
+                        "description": "The handle was not found",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
@@ -217,6 +319,43 @@
                 }
             }
         },
+        "Speaker": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "guid",
+                    "description": "The speaker's unique identifier"
+                },
+                "forename": {
+                    "type": "string",
+                    "description": "The speaker's forename"
+                },
+                "surname": {
+                    "type": "string",
+                    "description": "The speaker's surname"
+                },
+                "rating": {
+                    "type": "integer",
+                    "description": "The speaker's credibility rating"
+                },
+                "imageUri": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "The uri of the speaker's image"
+                },
+                "bio": {
+                    "type": "string",
+                    "description": "The speaker's biography"
+                },
+                "handles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/HandleSummary"
+                    }
+                }
+            }
+        },
         "SpeakerSummary": {
             "type": "object",
             "required": [
@@ -247,6 +386,35 @@
                 }
             }
         },
+        "Admin": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "guid",
+                    "description": "The admin's unique identifier"
+                },
+                "forename": {
+                    "type": "string",
+                    "description": "The admin's forename"
+                },
+                "surname": {
+                    "type": "string",
+                    "description": "The admin's surname"
+                },
+                "imageUri": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "The uri of the admin's image"
+                },
+                "handles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/HandleSummary"
+                    }
+                }
+            }
+        },
         "AdminSummary": {
             "type": "object",
             "required": [
@@ -270,6 +438,32 @@
                     "type": "string",
                     "format": "url",
                     "description": "The uri of the admin's image"
+                }
+            }
+        },
+        "Handle": {
+            "type": "object",
+            "properties": {
+                "profileId": {
+                    "type": "string",
+                    "format": "guid"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "identifier": {
+                    "type": "string"
+                }
+            }
+        },
+        "HandleSummary": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "identifier": {
+                    "type": "string"
                 }
             }
         },
