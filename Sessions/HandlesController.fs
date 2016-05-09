@@ -13,7 +13,7 @@ type HandlesController() =
     
     member this.Get() =
         Log.Information("Received GET request for ALL handles")
-        match ProfilesRepository.getHandles with
+        match ProfilesRepository.getHandles() with
         | Success handles -> this.Request.CreateResponse(handles)
         | Failure error -> this.Request.CreateErrorResponse(error.HttpStatus, error.Message)
 

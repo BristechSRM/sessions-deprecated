@@ -1,7 +1,6 @@
 ﻿module ProfilesRepository
 
 open System
-open System.Collections.Generic
 open System.Net
 open Dapper
 open Dapper.Contrib.Extensions
@@ -91,7 +90,7 @@ let addProfile (profile : Profile) =
                   Message = "Internal Server Error" }
 
 
-let getHandles : Result<IEnumerable<HandleEntity>,ServerError> = 
+let getHandles() = 
     use connection = getConnection()
     connection.Open()
     try
@@ -99,10 +98,6 @@ let getHandles : Result<IEnumerable<HandleEntity>,ServerError> =
         handles 
         |> Success
     with
-    | :? SqlException as sqlex -> 
-        Log.Warning("getHandles() - SqlException: {0}", sqlex)
-        Failure { HttpStatus = HttpStatusCode.BadRequest
-                  Message = sqlex.Message }
     | ex ->
         Log.Warning("getHandles() - Exception: {0}", ex)
         Failure { HttpStatus = HttpStatusCode.BadRequest
@@ -114,17 +109,13 @@ let getHandle (handletype : string)(identifier : string) =
     connection.Open()
     try
         let cmd = String.Format("select profileId, type, identifier from handles where type = '{0}' and identifier = '{1}'", handletype, identifier)
-        let handles = connection.Query(cmd)
+        let handles = connection.Query<HandleEntity>(cmd)
         if not ( Seq.isEmpty handles ) then 
             handles |> Seq.head |> Success
         else Failure {
             HttpStatus = HttpStatusCode.NotFound
             Message = "" }
     with
-    | :? SqlException as sqlex -> 
-        Log.Warning("getHandle() - SqlException: {0}", sqlex)
-        Failure { HttpStatus = HttpStatusCode.BadRequest
-                  Message = sqlex.Message }
     | ex ->
         Log.Warning("getHandle() - Exception: {0}", ex)
         Failure { HttpStatus = HttpStatusCode.BadRequest
