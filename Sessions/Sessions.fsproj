@@ -32,6 +32,7 @@
     <Compile Include="Models.fs" />
     <Compile Include="ProfilesRepository.fs" />
     <Compile Include="SessionsRepository.fs" />
+    <Compile Include="HandlesController.fs" />
     <Compile Include="ProfilesController.fs" />
     <Compile Include="SessionsController.fs" />
     <Compile Include="DocsController.fs" />

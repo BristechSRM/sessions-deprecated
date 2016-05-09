@@ -9,6 +9,7 @@ open System.Data.SqlClient
 open MySql.Data.MySqlClient
 open Models
 open Entities
+open Serilog
 
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString
 let getConnection() = new MySqlConnection(connectionString)
@@ -87,3 +88,36 @@ let addProfile (profile : Profile) =
         connection.Close()
         Failure { HttpStatus = HttpStatusCode.InternalServerError
                   Message = "Internal Server Error" }
+
+
+let getHandles() = 
+    use connection = getConnection()
+    connection.Open()
+    try
+        let handles = connection.Query<HandleEntity>("select profileId, type, identifier from handles order by type, identifier")
+        handles 
+        |> Success
+    with
+    | ex ->
+        Log.Warning("getHandles() - Exception: {0}", ex)
+        Failure { HttpStatus = HttpStatusCode.BadRequest
+                  Message = ex.Message }
+
+
+let getHandle (handletype : string) (identifier : string) = 
+    use connection = getConnection()
+    connection.Open()
+    try
+        let cmd = String.Format("select profileId, type, identifier from handles where type = '{0}' and identifier = '{1}'", handletype, identifier)
+        let handles = connection.Query<HandleEntity>(cmd)
+        if not ( Seq.isEmpty handles ) then 
+            handles |> Seq.head |> Success
+        else Failure {
+            HttpStatus = HttpStatusCode.NotFound
+            Message = "" }
+    with
+    | ex ->
+        Log.Warning("getHandle() - Exception: {0}", ex)
+        Failure { HttpStatus = HttpStatusCode.BadRequest
+                  Message = ex.Message }
+
