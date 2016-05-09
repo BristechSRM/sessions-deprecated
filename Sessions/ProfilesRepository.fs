@@ -104,7 +104,7 @@ let getHandles() =
                   Message = ex.Message }
 
 
-let getHandle (handletype : string)(identifier : string) = 
+let getHandle (handletype : string) (identifier : string) = 
     use connection = getConnection()
     connection.Open()
     try
