@@ -87,7 +87,7 @@ let getSessions() =
     with
     | ex ->
         Log.Error("getSessions() - Exception: {0}", ex)
-        seq<Session>{ do() }
+        Seq.empty
 
 
 type SessionSelectArgs = 
