@@ -11,7 +11,6 @@ type SessionEntity =
       Status : string
       SpeakerId : Guid
       AdminId : Guid
-      ThreadId : Guid
       DateAdded : DateTime
       Date : Nullable<DateTime> }
 
@@ -32,8 +31,7 @@ type SessionSummaryEntity =
       AdminId : Guid
       AdminForename : string
       AdminSurname : string
-      AdminImageUrl : string
-      ThreadId: Guid }
+      AdminImageUrl : string }
 
 [<Table("profiles")>]
 type ProfileEntity = 

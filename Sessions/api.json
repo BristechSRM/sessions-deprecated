@@ -20,7 +20,7 @@
                     "events"
                 ],
                 "summary": "Retrieves sessions.",
-                "description": "The session details including status, title, admin, speaker and thread ids.",
+                "description": "The session details including status, title, admin, and speaker.",
                 "responses": {
                     "200": {
                         "description": "Successful response",
@@ -262,11 +262,6 @@
                 "admin": {
                     "$ref": "#/definitions/AdminSummary"
                 },
-                "threadId": {
-                    "type": "string",
-                    "format": "guid",
-                    "description": "The unique identifier of any session conversation thread."
-                },
                 "dateAdded": {
                     "type": "string",
                     "format": "ISO 8601",
@@ -311,11 +306,6 @@
                     "type": "string",
                     "format": "guid",
                     "description": "The unique identifier of the session administrator."
-                },
-                "threadId": {
-                    "type": "string",
-                    "format": "guid",
-                    "description": "The unique identifier of any session conversation thread."
                 }
             }
         },
