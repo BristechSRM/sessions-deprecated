@@ -8,6 +8,7 @@ open System.Configuration
 open MySql.Data.MySqlClient
 open Dapper
 open System.Data.SqlClient
+open Serilog
 
 //TODO Use Result DU 
 //TODO common code with other repo
@@ -32,8 +33,7 @@ let sessionSummarySql = """SELECT
         `s`.`adminId` AS `adminId`,
         `a`.`forename` AS `adminForename`,
         `a`.`surname` AS `adminSurname`,
-        `a`.`imageUrl` AS `adminImageUrl`,
-        `s`.`threadId` AS `threadId`
+        `a`.`imageUrl` AS `adminImageUrl`
     FROM
         ((`sessions` `s`
         LEFT JOIN `profiles` `sp` ON ((`sp`.`id` = `s`.`speakerId`)))
@@ -59,7 +59,6 @@ let entityToSession (entity : SessionSummaryEntity) : Session =
       Status = entity.Status
       Date = Option.ofNullable entity.Date
       DateAdded = entity.DateAdded
-      ThreadId = entity.ThreadId
       Speaker = speaker
       Admin = admin }
 
@@ -71,60 +70,64 @@ let sessionToEntity (session : NewSession) : SessionEntity =
       Date = session.Date |> Option.toNullable
       SpeakerId = session.SpeakerId
       AdminId = session.AdminId
-      ThreadId = session.ThreadId
       DateAdded = 
         match session.DateAdded with
         | None -> DateTime.UtcNow
         | Some date -> date }
 
 let getSessions() = 
-    use connection = getConnection()
-    connection.Open()
+    try
+        use connection = getConnection()
+        connection.Open()
 
-    let result = connection.Query<SessionSummaryEntity>(sessionSummarySql)
+        let result = connection.Query<SessionSummaryEntity>(sessionSummarySql)
 
-    connection.Close()
-    result |> Seq.map entityToSession
+        connection.Close()
+        result |> Seq.map entityToSession
+    with
+    | ex ->
+        Log.Error("getSessions() - Exception: {0}", ex)
+        Seq.empty
+
 
 type SessionSelectArgs = 
     { SessionId : Guid }
 
 let getSession (id : Guid) =
-    use connection = getConnection()
-    connection.Open()
+    try
+        use connection = getConnection()
+        connection.Open()
 
-    let args = { SessionId = id }
-    let sessions = connection.Query<SessionSummaryEntity>(sessionSummarySql + " WHERE `s`.`id` = @SessionId", args)
-    let result = 
-        if Seq.isEmpty sessions then None
-        else sessions |> Seq.head |> entityToSession |> Some
+        let args = { SessionId = id }
+        let sessions = connection.Query<SessionSummaryEntity>(sessionSummarySql + " WHERE `s`.`id` = @SessionId", args)
+        let result = 
+            if Seq.isEmpty sessions then None
+            else sessions |> Seq.head |> entityToSession |> Some
 
-    connection.Close()
-    result
+        connection.Close()
+        result
+    with
+    | ex ->
+        Log.Error("getSession(id) - Exception: {0}", ex)
+        None
+
 
 let createSession (session : NewSession) = 
-    use connection = getConnection()
-    connection.Open()
-    use transaction = connection.BeginTransaction()
-
     try
+        use connection = getConnection()
+        connection.Open()
+        use transaction = connection.BeginTransaction()
 
         let args = { session with Id = Guid.NewGuid() } |> sessionToEntity
 
-        connection.Execute("insert into sessions(id, title, status, date, speakerId, adminId, threadId, dateAdded) values 
-            (@Id, @Title, @Status, @Date, @SpeakerId, @AdminId, @ThreadId, @DateAdded)", args) |> ignore
+        connection.Execute("insert into sessions(id, title, status, date, speakerId, adminId, dateAdded) values 
+            (@Id, @Title, @Status, @Date, @SpeakerId, @AdminId, @DateAdded)", args) |> ignore
 
         transaction.Commit()
         connection.Close()
 
         Success args.Id
-
     with 
-        | :? SqlException as ex -> 
-            transaction.Rollback()
-            connection.Close()
-            Failure { HttpStatus = HttpStatusCode.BadRequest; Message = ex.Message}
-        | _-> 
-            transaction.Rollback()
-            connection.Close()
-            Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = "Internal Server Error"}
+    | ex ->
+        Log.Error("createSession() - Exception: {0}", ex)
+        Failure { HttpStatus = HttpStatusCode.BadRequest; Message = ex.Message}

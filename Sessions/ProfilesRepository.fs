@@ -40,35 +40,35 @@ let modelToEntity (model : Profile) : ProfileEntity =
       ImageUrl = model.ImageUrl
       Bio = model.Bio }
 
+
 type IdWrapper = 
     { Id : Guid }
 
 let getProfile (profileId : Guid) = 
-    use connection = getConnection()
-    connection.Open()
     try 
+        use connection = getConnection()
+        connection.Open()
+        
         let handles = connection.Query<HandleEntity>("select type,identifier,profileId from handles where profileId = @Id", { Id = profileId })
         let profileEntity = connection.Get<ProfileEntity>(profileId)
         let profile = entityToModel profileEntity handles
         connection.Close()
         Success profile
     with
-    | :? SqlException as ex -> 
-        connection.Close()
+    | ex ->
+        Log.Error("getProfile(profileId) - Exception: {0}", ex)
         Failure { HttpStatus = HttpStatusCode.BadRequest
                   Message = ex.Message }
-    | ex -> 
-        connection.Close()
-        Failure { HttpStatus = HttpStatusCode.InternalServerError
-                  Message = "Unhandled error: " + ex.Message }
+
 
 let addProfile (profile : Profile) = 
-    let newId = Guid.NewGuid()
-    let profileEntity = modelToEntity { profile with Id = newId }
-    use connection = getConnection()
-    connection.Open()
-    use transaction = connection.BeginTransaction()
     try 
+        let newId = Guid.NewGuid()
+        let profileEntity = modelToEntity { profile with Id = newId }
+        use connection = getConnection()
+        connection.Open()
+    
+        use transaction = connection.BeginTransaction()
         let profileInsertCount = connection.Execute(@"insert profiles(id,forename,surname,rating,imageUrl) values (@Id,@Forename,@Surname,@Rating,@ImageUrl)", profileEntity)
         if profileInsertCount <> 1 then failwith "Incorrect number of inserted profiles found. Profile insert failed"
         let handleEntities = profile.Handles |> Seq.map (handleModelToEntity newId)
@@ -78,36 +78,32 @@ let addProfile (profile : Profile) =
         connection.Close()
         Success newId
     with
-    | :? SqlException as ex -> 
-        transaction.Rollback()
-        connection.Close()
+    | ex ->
+        Log.Error("addProfile() - Exception: {0}", ex)
         Failure { HttpStatus = HttpStatusCode.BadRequest
                   Message = ex.Message }
-    | _ -> 
-        transaction.Rollback()
-        connection.Close()
-        Failure { HttpStatus = HttpStatusCode.InternalServerError
-                  Message = "Internal Server Error" }
 
 
 let getHandles() = 
-    use connection = getConnection()
-    connection.Open()
     try
+        use connection = getConnection()
+        connection.Open()
+        
         let handles = connection.Query<HandleEntity>("select profileId, type, identifier from handles order by type, identifier")
         handles 
         |> Success
     with
     | ex ->
-        Log.Warning("getHandles() - Exception: {0}", ex)
+        Log.Error("getHandles() - Exception: {0}", ex)
         Failure { HttpStatus = HttpStatusCode.BadRequest
                   Message = ex.Message }
 
 
 let getHandle (handletype : string) (identifier : string) = 
-    use connection = getConnection()
-    connection.Open()
     try
+        use connection = getConnection()
+        connection.Open()
+        
         let cmd = String.Format("select profileId, type, identifier from handles where type = '{0}' and identifier = '{1}'", handletype, identifier)
         let handles = connection.Query<HandleEntity>(cmd)
         if not ( Seq.isEmpty handles ) then 
@@ -117,7 +113,6 @@ let getHandle (handletype : string) (identifier : string) =
             Message = "" }
     with
     | ex ->
-        Log.Warning("getHandle() - Exception: {0}", ex)
+        Log.Error("getHandle(handletype) - Exception: {0}", ex)
         Failure { HttpStatus = HttpStatusCode.BadRequest
                   Message = ex.Message }
-

@@ -42,8 +42,7 @@ type Session =
       Date : DateTime option
       DateAdded : DateTime
       Speaker : SpeakerSummary
-      Admin : AdminSummary option
-      ThreadId : Guid }
+      Admin : AdminSummary option }
 
 [<CLIMutable>]
 type NewSession =
@@ -56,7 +55,6 @@ type NewSession =
       [<JsonProperty(Required = Required.Always)>]
       SpeakerId : Guid
       AdminId : Guid
-      ThreadId : Guid
       DateAdded : DateTime option }
 
 [<CLIMutable>]
