@@ -1,6 +1,7 @@
 module Program
 
 open Microsoft.Owin.Hosting
+open System
 open System.Configuration
 open System.Threading
 open Logging
@@ -18,7 +19,7 @@ let main _ =
 
     try
         let baseUrl = ConfigurationManager.AppSettings.Get("BaseUrl")
-        if baseUrl |> isNull then
+        if String.IsNullOrEmpty baseUrl then
             failwith "Missing configuration value: 'BaseUrl'"
 
         use server = WebApp.Start<Bristech.Srm.HttpConfig.Startup>(baseUrl)
@@ -32,4 +33,4 @@ let main _ =
     with
     | ex ->
         Log.Fatal("Exception: {0}", ex)
-        -1
+        1
