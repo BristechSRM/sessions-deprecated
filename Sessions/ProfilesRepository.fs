@@ -87,50 +87,52 @@ let addProfile (profile : Profile) =
                   Message = ex.Message }
 
 let updateProfile (pid: Guid) (profile : Profile) = 
-    let handleDoesNotExistIn handles handle = 
-        handles |> Seq.exists (fun hl -> hl.Type = handle.Type && hl.Identifier = handle.Identifier) |> not
-    try 
-        match getProfile pid with
-        | Success _ ->        
-            if pid <> profile.Id then failwith "Invalid Data. specified profile Id in request url does not match Id of input profile"
-
-            let profileEntity = modelToEntity profile
-            let handleEntities = profile.Handles |> Seq.map (handleModelToEntity profileEntity.Id)
-
-            use connection = getConnection()
-            connection.Open()
-            use transaction = connection.BeginTransaction()
-
-            let profileUpdateCount = connection.Execute(@"update profiles set forename=@Forename,surname=@Surname,rating=@Rating,imageurl=@ImageUrl,bio=@Bio where Id = @Id",profileEntity)
-            if profileUpdateCount <> 1 then failwith "Update of profile data failed"
-
-            let storedHandles = connection.Query<HandleEntity>("select type,identifier,profileId from handles where profileId = @Id", dict [ "Id", box profile.Id ]) |> Seq.toList
-
-            let newHandles = handleEntities |> Seq.filter (handleDoesNotExistIn storedHandles)
-
-            let deletedHandles = storedHandles |> Seq.filter (handleDoesNotExistIn handleEntities)
-
-            let handlesInsertCount = connection.Execute(@"insert handles(type,identifier,profileId) values (@Type,@Identifier,@ProfileId)", newHandles)
-            if handlesInsertCount <> Seq.length newHandles then failwith "Incorrect number of inserted handles found. Handles insert failed"
-
-            let handlesDeleteCount = connection.Execute(@"delete from handles where profileId=@ProfileId and identifier=@Identifier and type=@type",deletedHandles)
-            if handlesDeleteCount <> Seq.length deletedHandles then failwith "Incorrect number of deleted handles found. Handles delete failed"
-
-            transaction.Commit()
-            connection.Close()
-            Success ()
-
-        | Failure error -> 
-            match error.HttpStatus with
-            | HttpStatusCode.NotFound -> 
-                Failure { HttpStatus = HttpStatusCode.NotFound
-                          Message = sprintf "No update performed. Profile with id: %A does not exist. Put is update only" pid}        
-            | _ -> Failure error
-    with
-    | ex -> 
-        Log.Error("updateProfile() - Exception {0}", ex)
+    if pid <> profile.Id then 
         Failure { HttpStatus = HttpStatusCode.BadRequest
-                  Message = ex.Message }
+                  Message = "Invalid Data. specified profile Id in request url does not match Id of input profile" } 
+    else 
+        let handleDoesNotExistIn handles handle = 
+            handles |> Seq.exists (fun hl -> hl.Type = handle.Type && hl.Identifier = handle.Identifier) |> not
+        try 
+            match getProfile pid with
+            | Success _ ->
+                let profileEntity = modelToEntity profile
+                let handleEntities = profile.Handles |> Seq.map (handleModelToEntity profileEntity.Id)
+
+                use connection = getConnection()
+                connection.Open()
+                use transaction = connection.BeginTransaction()
+
+                let profileUpdateCount = connection.Execute(@"update profiles set forename=@Forename,surname=@Surname,rating=@Rating,imageurl=@ImageUrl,bio=@Bio where Id = @Id",profileEntity)
+                if profileUpdateCount <> 1 then failwith "Update of profile data failed"
+
+                let storedHandles = connection.Query<HandleEntity>("select type,identifier,profileId from handles where profileId = @Id", dict [ "Id", box profile.Id ]) |> Seq.toList
+
+                let newHandles = handleEntities |> Seq.filter (handleDoesNotExistIn storedHandles)
+
+                let deletedHandles = storedHandles |> Seq.filter (handleDoesNotExistIn handleEntities)
+
+                let handlesInsertCount = connection.Execute(@"insert handles(type,identifier,profileId) values (@Type,@Identifier,@ProfileId)", newHandles)
+                if handlesInsertCount <> Seq.length newHandles then failwith "Incorrect number of inserted handles found. Handles insert failed"
+
+                let handlesDeleteCount = connection.Execute(@"delete from handles where profileId=@ProfileId and identifier=@Identifier and type=@type",deletedHandles)
+                if handlesDeleteCount <> Seq.length deletedHandles then failwith "Incorrect number of deleted handles found. Handles delete failed"
+
+                transaction.Commit()
+                connection.Close()
+                Success ()
+
+            | Failure error -> 
+                match error.HttpStatus with
+                | HttpStatusCode.NotFound -> 
+                    Failure { HttpStatus = HttpStatusCode.NotFound
+                              Message = sprintf "No update performed. Profile with id: %A does not exist. Put is update only" pid}        
+                | _ -> Failure error
+        with
+        | ex -> 
+            Log.Error("updateProfile() - Exception {0}", ex)
+            Failure { HttpStatus = HttpStatusCode.InternalServerError
+                      Message = ex.Message }
 
 let getHandles() = 
     try
