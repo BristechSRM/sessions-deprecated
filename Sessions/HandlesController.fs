@@ -1,7 +1,5 @@
 ﻿module HandlesController
 
-open System
-open System.Net
 open System.Net.Http
 open System.Web.Http
 open Serilog
