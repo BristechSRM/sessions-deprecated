@@ -40,24 +40,21 @@ let modelToEntity (model : Profile) : ProfileEntity =
       ImageUrl = model.ImageUrl
       Bio = model.Bio }
 
-
-type IdWrapper = 
-    { Id : Guid }
-
 let getProfile (profileId : Guid) = 
     try 
         use connection = getConnection()
         connection.Open()
         
-        let handles = connection.Query<HandleEntity>("select type,identifier,profileId from handles where profileId = @Id", { Id = profileId })
         let profileEntity = connection.Get<ProfileEntity>(profileId)
+        let handleEntities = connection.Query<HandleEntity>("select type,identifier,profileId from handles where profileId = @Id", dict ["Id", box profileId ] )
+
         connection.Close()
 
         if box profileEntity |> isNull then
             Failure { HttpStatus = HttpStatusCode.NotFound
                       Message = sprintf "Profile with id %A does not exist" profileId }
         else 
-            let profile = entityToModel profileEntity handles
+            let profile = entityToModel profileEntity handleEntities
             Success profile
     with
     | ex ->
@@ -67,9 +64,8 @@ let getProfile (profileId : Guid) =
 
 let addProfile (profile : Profile) = 
     try 
-        let newId = Guid.NewGuid()
-        let profileEntity = modelToEntity { profile with Id = newId }
-        let handleEntities = profile.Handles |> Seq.map (handleModelToEntity newId)
+        let profileEntity = modelToEntity { profile with Id = Guid.NewGuid() }
+        let handleEntities = profile.Handles |> Seq.map (handleModelToEntity profileEntity.Id)
 
         use connection = getConnection()
         connection.Open()    
@@ -83,7 +79,7 @@ let addProfile (profile : Profile) =
 
         transaction.Commit()
         connection.Close()
-        Success newId
+        Success profileEntity.Id
     with
     | ex ->
         Log.Error("addProfile() - Exception: {0}", ex)
@@ -95,9 +91,11 @@ let updateProfile (pid: Guid) (profile : Profile) =
         handles |> Seq.exists (fun hl -> hl.Type = handle.Type && hl.Identifier = handle.Identifier) |> not
     try 
         match getProfile pid with
-        | Success oldProfile ->        
+        | Success _ ->        
+            if pid <> profile.Id then failwith "Invalid Data. specified profile Id in request url does not match Id of input profile"
+
             let profileEntity = modelToEntity profile
-            let handleEntities = profile.Handles |> Seq.map (handleModelToEntity profile.Id)
+            let handleEntities = profile.Handles |> Seq.map (handleModelToEntity profileEntity.Id)
 
             use connection = getConnection()
             connection.Open()
@@ -106,15 +104,11 @@ let updateProfile (pid: Guid) (profile : Profile) =
             let profileUpdateCount = connection.Execute(@"update profiles set forename=@Forename,surname=@Surname,rating=@Rating,imageurl=@ImageUrl,bio=@Bio where Id = @Id",profileEntity)
             if profileUpdateCount <> 1 then failwith "Update of profile data failed"
 
-            let storedHandles = connection.Query<HandleEntity>("select type,identifier,profileId from handles where profileId = @Id", { Id = profile.Id }) |> Seq.toList
+            let storedHandles = connection.Query<HandleEntity>("select type,identifier,profileId from handles where profileId = @Id", dict [ "Id", box profile.Id ]) |> Seq.toList
 
-            let newHandles = 
-                handleEntities
-                |> Seq.filter (handleDoesNotExistIn storedHandles)
+            let newHandles = handleEntities |> Seq.filter (handleDoesNotExistIn storedHandles)
 
-            let deletedHandles = 
-                storedHandles
-                |> Seq.filter (handleDoesNotExistIn handleEntities)
+            let deletedHandles = storedHandles |> Seq.filter (handleDoesNotExistIn handleEntities)
 
             let handlesInsertCount = connection.Execute(@"insert handles(type,identifier,profileId) values (@Type,@Identifier,@ProfileId)", newHandles)
             if handlesInsertCount <> Seq.length newHandles then failwith "Incorrect number of inserted handles found. Handles insert failed"
@@ -127,8 +121,11 @@ let updateProfile (pid: Guid) (profile : Profile) =
             Success ()
 
         | Failure error -> 
-            Failure { HttpStatus = HttpStatusCode.NotFound
-                      Message = sprintf "No update performed. Profile with id: %A does not exist. Put is update only" pid}        
+            match error.HttpStatus with
+            | HttpStatusCode.NotFound -> 
+                Failure { HttpStatus = HttpStatusCode.NotFound
+                          Message = sprintf "No update performed. Profile with id: %A does not exist. Put is update only" pid}        
+            | _ -> Failure error
     with
     | ex -> 
         Log.Error("updateProfile() - Exception {0}", ex)
@@ -155,13 +152,12 @@ let getHandle (handletype : string) (identifier : string) =
         use connection = getConnection()
         connection.Open()
         
-        let cmd = String.Format("select profileId, type, identifier from handles where type = '{0}' and identifier = '{1}'", handletype, identifier)
-        let handles = connection.Query<HandleEntity>(cmd)
-        if not ( Seq.isEmpty handles ) then 
+        let handles = connection.Query<HandleEntity>("select profileId, type, identifier from handles where type = @Type and identifier = @Identifier", dict["Type", box handletype; "Identifier", box identifier])
+        if handles |> Seq.isEmpty |> not then 
             handles |> Seq.head |> Success
         else Failure {
             HttpStatus = HttpStatusCode.NotFound
-            Message = "" }
+            Message = sprintf "A handle with type %s and identifier %s could not be found" handletype identifier }
     with
     | ex ->
         Log.Error("getHandle(handletype) - Exception: {0}", ex)
