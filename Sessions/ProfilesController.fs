@@ -24,7 +24,7 @@ type ProfilesController() =
         | Failure error -> x.Request.CreateErrorResponse(error.HttpStatus, error.Message)
 
     member x.Put(id: Guid, updatedProfile : Profile) = 
-        Log.Information("Recieved Put request for profile with id {id}", id)
+        Log.Information("Received  Put request for profile with id {id}", id)
         match ProfilesRepository.updateProfile id updatedProfile with
         | Success _ -> x.Request.CreateResponse(HttpStatusCode.OK)
         | Failure error -> x.Request.CreateErrorResponse(error.HttpStatus, error.Message)
