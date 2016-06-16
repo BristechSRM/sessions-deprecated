@@ -81,8 +81,6 @@ let getSessions() =
         connection.Open()
 
         let result = connection.Query<SessionSummaryEntity>(sessionSummarySql)
-
-        connection.Close()
         result |> Seq.map entityToSession
     with
     | ex ->
@@ -104,7 +102,6 @@ let getSession (id : Guid) =
             if Seq.isEmpty sessions then None
             else sessions |> Seq.head |> entityToSession |> Some
 
-        connection.Close()
         result
     with
     | ex ->
@@ -124,7 +121,6 @@ let createSession (session : NewSession) =
             (@Id, @Title, @Status, @Date, @SpeakerId, @AdminId, @DateAdded)", args) |> ignore
 
         transaction.Commit()
-        connection.Close()
 
         Success args.Id
     with 
