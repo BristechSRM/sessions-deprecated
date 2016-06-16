@@ -18,7 +18,7 @@ type ProfilesController() =
             Log.Information("Success: Post request for profile with id: {id} complete", id)
             x.Request.CreateResponse(profile)
         | Failure error -> 
-            Log.Error("Failure: Put request for profile with id: {id} failed with status code: {code} and message: {message}", id, error.HttpStatus, error.Message)
+            Log.Error("Put request for profile with id: {id} failed with status code: {code} and message: {message}", id, error.HttpStatus, error.Message)
             x.Request.CreateErrorResponse(error.HttpStatus, error.Message)
     
     //TODO validation
@@ -29,7 +29,7 @@ type ProfilesController() =
             Log.Information("Success: Post request for profile with id: {id} complete", id)
             x.Request.CreateResponse(HttpStatusCode.Created, id)
         | Failure error -> 
-            Log.Error("Failure: Post request for profile with id: {id} failed with status code: {code} and message: {message}", id, error.HttpStatus, error.Message)
+            Log.Error("Post request for profile with id: {id} failed with status code: {code} and message: {message}", id, error.HttpStatus, error.Message)
             x.Request.CreateErrorResponse(error.HttpStatus, error.Message)
 
     member x.Put(id: Guid, updatedProfile : Profile) = 
@@ -39,5 +39,5 @@ type ProfilesController() =
             Log.Information("Success: Put request for profile with id: {id} complete", id)
             x.Request.CreateResponse(HttpStatusCode.OK)
         | Failure error -> 
-            Log.Error("Failure: Put request for profile with id: {id} failed with status code: {code} and message: {message}", id, error.HttpStatus, error.Message)
+            Log.Error("Put request for profile with id: {id} failed with status code: {code} and message: {message}", id, error.HttpStatus, error.Message)
             x.Request.CreateErrorResponse(error.HttpStatus, error.Message)
