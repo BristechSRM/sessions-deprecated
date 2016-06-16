@@ -46,15 +46,13 @@ let getProfile (profileId : Guid) =
         connection.Open()
         
         let profileEntity = connection.Get<ProfileEntity>(profileId)
-        let handleEntities = connection.Query<HandleEntity>("select type,identifier,profileId from handles where profileId=@Id", dict ["Id", box profileId ] )
 
-        connection.Close()
-
-        if box profileEntity |> isNull then
-            Failure { HttpStatus = HttpStatusCode.NotFound; Message = sprintf "Profile with id %A does not exist" profileId }
-        else 
+        if box profileEntity |> isNull |> not then
+            let handleEntities = connection.Query<HandleEntity>("select type,identifier,profileId from handles where profileId=@Id", dict ["Id", box profileId ] )
             let profile = entityToModel profileEntity handleEntities
             Success profile
+        else 
+            Failure { HttpStatus = HttpStatusCode.NotFound; Message = sprintf "Profile with id %A does not exist" profileId }
     with
     | ex ->
         Log.Error("getProfile(profileId) - Exception: {0}", ex)
