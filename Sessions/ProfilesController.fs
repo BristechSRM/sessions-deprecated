@@ -19,7 +19,7 @@ type ProfilesController() =
     
     //TODO validation
     member x.Post(newProfile : Profile) = 
-        Log.Information("Recieved Post request for new profile")
+        Log.Information("Received Post request for new profile")
         match addProfile newProfile with
         | Success id -> x.Request.CreateResponse(HttpStatusCode.Created, id)
         | Failure error -> x.Request.CreateErrorResponse(error.HttpStatus, error.Message)
