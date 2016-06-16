@@ -1,4 +1,4 @@
-if [ ! -d ".nuget" ]; then  
+if [ ! -d ".nuget" ]; then
     echo "Creating .nuget directory"
     mkdir .nuget
 else
@@ -20,5 +20,3 @@ if [ ! -f "packages/FAKE/tools/FAKE.exe" ]; then
 else
     echo "Fake Package found"
 fi
-
-sh setupGitHooks.sh
