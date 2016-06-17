@@ -40,8 +40,64 @@ let modelToEntity (model : Profile) : ProfileEntity =
       ImageUrl = model.ImageUrl
       Bio = model.Bio }
 
-let handleDoesNotExistIn handles handle = 
+let handleDoesNotExistIn (handles : HandleEntity seq) (handle : HandleEntity)= 
     handles |> Seq.exists (fun hl -> hl.Type = handle.Type && hl.Identifier = handle.Identifier) |> not
+
+let private insertHandleEntities (connection : MySqlConnection) (newHandles : HandleEntity seq) = 
+    let handlesInsertCount = connection.Execute(@"insert handles(type,identifier,profileId) values (@Type,@Identifier,@ProfileId)", newHandles)
+    if handlesInsertCount = Seq.length newHandles then 
+        Success ()
+    else 
+        Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = "Handles insert failed" } 
+
+let private deleteHandleEntities (connection : MySqlConnection) (handlesToDelete : HandleEntity seq) = 
+    let handlesDeleteCount = connection.Execute(@"delete from handles where profileId=@ProfileId and identifier=@Identifier and type=@type", handlesToDelete)
+    if handlesDeleteCount = Seq.length handlesToDelete then 
+        Success ()
+    else 
+        Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = "Handles delete failed" } 
+
+let getHandle (handletype : string) (identifier : string) = 
+    try
+        use connection = getConnection()
+        connection.Open()
+        
+        let handles = connection.Query<HandleEntity>("select profileId, type, identifier from handles where type = @Type and identifier = @Identifier", dict["Type", box handletype; "Identifier", box identifier])
+        if handles |> Seq.isEmpty |> not then 
+            handles |> Seq.head |> Success
+        else Failure {
+            HttpStatus = HttpStatusCode.NotFound
+            Message = sprintf "A handle with type %s and identifier %s could not be found" handletype identifier }
+    with
+    | ex ->
+        Log.Error("getHandle(handletype) - Exception: {0}", ex)
+        Failure { HttpStatus = HttpStatusCode.InternalServerError
+                  Message = ex.Message }
+
+let getHandles() = 
+    try
+        use connection = getConnection()
+        connection.Open()
+        
+        connection.Query<HandleEntity>("select profileId, type, identifier from handles order by type, identifier")
+        |> Success
+    with
+    | ex ->
+        Log.Error("getHandles() - Exception: {0}", ex)
+        Failure { HttpStatus = HttpStatusCode.InternalServerError
+                  Message = ex.Message }
+
+let private insertProfileEntity (connection : MySqlConnection) (profileEntity : ProfileEntity) = 
+    let profileInsertCount = connection.Execute(@"insert profiles(id,forename,surname,rating,imageUrl) values (@Id,@Forename,@Surname,@Rating,@ImageUrl)", profileEntity)
+    match profileInsertCount with
+    | 1 -> Success ()
+    | _ -> Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = "Profile insert failed"} 
+
+let private updateProfileEntity (connection : MySqlConnection) (profileEntity : ProfileEntity) = 
+    let profileUpdateCount = connection.Execute(@"update profiles set forename=@Forename,surname=@Surname,rating=@Rating,imageurl=@ImageUrl,bio=@Bio where Id=@Id", profileEntity)
+    match profileUpdateCount with
+    | 1 -> Success ()
+    | _ -> Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = "Update of profile data failed"} 
 
 let getProfile (profileId : Guid) = 
     try 
@@ -71,41 +127,20 @@ let addProfile (profile : Profile) =
         connection.Open()    
         use transaction = connection.BeginTransaction()
 
-        let profileInsertCount = connection.Execute(@"insert profiles(id,forename,surname,rating,imageUrl) values (@Id,@Forename,@Surname,@Rating,@ImageUrl)", profileEntity)
-        if profileInsertCount <> 1 then Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = "Profile insert failed"} else 
-
-        let handlesInsertCount = connection.Execute(@"insert handles(type,identifier,profileId) values (@Type,@Identifier,@ProfileId)", handleEntities)
-        if handlesInsertCount <> Seq.length profile.Handles then Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = "Handles insert failed" } else
-
-        transaction.Commit()
-        Success profileEntity.Id
+        match insertProfileEntity connection profileEntity with 
+        | Success () -> 
+            match insertHandleEntities connection handleEntities with
+            | Success () ->
+                transaction.Commit()
+                Success profileEntity.Id
+            | Failure error -> Failure error
+        | Failure error -> Failure error
     with
     | ex ->
         Log.Error("addProfile() - Exception: {0}", ex)
-        Failure { HttpStatus = HttpStatusCode.BadRequest
-                  Message = ex.Message }
+        Failure { HttpStatus = HttpStatusCode.BadRequest; Message = ex.Message }
 
-let insertHandles (connection : MySqlConnection) (newHandles : HandleEntity seq) = 
-    let handlesInsertCount = connection.Execute(@"insert handles(type,identifier,profileId) values (@Type,@Identifier,@ProfileId)", newHandles)
-    if handlesInsertCount = Seq.length newHandles then 
-        Success ()
-    else 
-        Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = "Handles insert failed" } 
-
-let deleteHandles (connection : MySqlConnection) (handlesToDelete : HandleEntity seq) = 
-    let handlesDeleteCount = connection.Execute(@"delete from handles where profileId=@ProfileId and identifier=@Identifier and type=@type", handlesToDelete)
-    if handlesDeleteCount = Seq.length handlesToDelete then 
-        Success ()
-    else 
-        Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = "Handles delete failed" } 
-
-let updateProfileEntity (connection : MySqlConnection) (profileEntity : ProfileEntity) = 
-    let profileUpdateCount = connection.Execute(@"update profiles set forename=@Forename,surname=@Surname,rating=@Rating,imageurl=@ImageUrl,bio=@Bio where Id=@Id", profileEntity)
-    match profileUpdateCount with
-    | 1 -> Success ()
-    | _ -> Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = "Update of profile data failed"} 
-
-let updateProfileAndHandleEntities pid profileEntity handleEntities = 
+let private updateProfileAndHandleEntities pid profileEntity handleEntities = 
     try 
         match getProfile pid with
         | Success _ ->
@@ -119,9 +154,9 @@ let updateProfileAndHandleEntities pid profileEntity handleEntities =
                 let newHandles = handleEntities |> Seq.filter (handleDoesNotExistIn storedHandles)
                 let handlesToDelete = storedHandles |> Seq.filter (handleDoesNotExistIn handleEntities)
 
-                match insertHandles connection newHandles with
+                match insertHandleEntities connection newHandles with
                 | Success () -> 
-                    match deleteHandles connection handlesToDelete with
+                    match deleteHandleEntities connection handlesToDelete with
                     | Success () -> 
                         transaction.Commit()
                         Success ()
@@ -138,7 +173,6 @@ let updateProfileAndHandleEntities pid profileEntity handleEntities =
         Log.Error("updateProfile() - Exception {0}", ex)
         Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = ex.Message }
 
-
 let updateProfile (pid: Guid) (profile : Profile) = 
     if pid = profile.Id then 
         let profileEntity = modelToEntity profile
@@ -146,34 +180,3 @@ let updateProfile (pid: Guid) (profile : Profile) =
         updateProfileAndHandleEntities pid profileEntity handleEntities
     else 
         Failure { HttpStatus = HttpStatusCode.BadRequest; Message = "Invalid Data. specified profile Id in request url does not match Id of input profile" } 
-
-let getHandles() = 
-    try
-        use connection = getConnection()
-        connection.Open()
-        
-        connection.Query<HandleEntity>("select profileId, type, identifier from handles order by type, identifier")
-        |> Success
-    with
-    | ex ->
-        Log.Error("getHandles() - Exception: {0}", ex)
-        Failure { HttpStatus = HttpStatusCode.InternalServerError
-                  Message = ex.Message }
-
-
-let getHandle (handletype : string) (identifier : string) = 
-    try
-        use connection = getConnection()
-        connection.Open()
-        
-        let handles = connection.Query<HandleEntity>("select profileId, type, identifier from handles where type = @Type and identifier = @Identifier", dict["Type", box handletype; "Identifier", box identifier])
-        if handles |> Seq.isEmpty |> not then 
-            handles |> Seq.head |> Success
-        else Failure {
-            HttpStatus = HttpStatusCode.NotFound
-            Message = sprintf "A handle with type %s and identifier %s could not be found" handletype identifier }
-    with
-    | ex ->
-        Log.Error("getHandle(handletype) - Exception: {0}", ex)
-        Failure { HttpStatus = HttpStatusCode.InternalServerError
-                  Message = ex.Message }
