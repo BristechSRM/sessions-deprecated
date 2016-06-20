@@ -12,13 +12,19 @@ type ServerError =
     { HttpStatus : HttpStatusCode
       Message : string }  
 
-type PatchOperation<'Value> = 
-    | Add of path: string * value: 'Value
-    | Remove of path: string
-    | Replace of path: string * value: 'Value
-    | Copy of from: string * path: string
-    | Move of from: string * path: string
-    | Test of path: string * value: 'Value
+type RawPatchOperation = 
+    { Op : string
+      Path : string
+      Value : string
+      From : string }
+
+type PatchOperation = 
+    | Add of path: string [] * value: string
+    | Remove of path: string []
+    | Replace of path: string [] * value: string
+    | Copy of from: string [] * path: string []
+    | Move of from: string [] * path: string []
+    | Test of path: string [] * value: string
 
 type Rating = 
     | Zero = 0
