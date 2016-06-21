@@ -183,7 +183,6 @@ let updateProfile (pid: Guid) (profile: Profile) =
     else 
         Failure { HttpStatus = HttpStatusCode.BadRequest; Message = "Invalid Data. specified profile Id in request url does not match Id of input profile." } 
 
-//TODO More flexible approach using reflection?
 let applyPatchOp (profile: Profile) (patchOp: PatchOperation) = 
     match patchOp with
     | Replace(path , value)-> 
