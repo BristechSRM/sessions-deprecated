@@ -69,10 +69,9 @@ let getHandle (handletype : string) (identifier : string) =
             HttpStatus = HttpStatusCode.NotFound
             Message = sprintf "A handle with type %s and identifier %s could not be found" handletype identifier }
     with
-        | ex ->
-            Log.Error("getHandle(handletype) - Exception: {0}", ex)
-            Failure { HttpStatus = HttpStatusCode.InternalServerError
-                      Message = ex.Message }
+    | ex ->
+        Log.Error("getHandle(handletype) - Exception: {0}", ex)
+        Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = ex.Message }
 
 let getHandles() = 
     try
@@ -82,10 +81,9 @@ let getHandles() =
         connection.Query<HandleEntity>("select profileId, type, identifier from handles order by type, identifier")
         |> Success
     with
-        | ex ->
-            Log.Error("getHandles() - Exception: {0}", ex)
-            Failure { HttpStatus = HttpStatusCode.InternalServerError
-                      Message = ex.Message }
+    | ex ->
+        Log.Error("getHandles() - Exception: {0}", ex)
+        Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = ex.Message }
 
 let private insertProfileEntity (connection : MySqlConnection) (profileEntity : ProfileEntity) = 
     let profileInsertCount = connection.Execute(@"insert profiles(id,forename,surname,rating,imageUrl) values (@Id,@Forename,@Surname,@Rating,@ImageUrl)", profileEntity)
@@ -113,10 +111,9 @@ let getProfile (profileId : Guid) =
         else 
             Failure { HttpStatus = HttpStatusCode.NotFound; Message = sprintf "Profile with id %A does not exist." profileId }
     with
-        | ex ->
-            Log.Error("getProfile(profileId) - Exception: {0}", ex)
-            Failure { HttpStatus = HttpStatusCode.InternalServerError
-                      Message = ex.Message }
+    | ex ->
+        Log.Error("getProfile(profileId) - Exception: {0}", ex)
+        Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = ex.Message }
 
 let addProfile (profile : Profile) = 
     try 
@@ -136,9 +133,9 @@ let addProfile (profile : Profile) =
             | Failure error -> Failure error
         | Failure error -> Failure error
     with
-        | ex ->
-            Log.Error("addProfile() - Exception: {0}", ex)
-            Failure { HttpStatus = HttpStatusCode.BadRequest; Message = ex.Message }
+    | ex ->
+        Log.Error("addProfile() - Exception: {0}", ex)
+        Failure { HttpStatus = HttpStatusCode.BadRequest; Message = ex.Message }
 
 let private updateProfileAndHandleEntities (profile: Profile) = 
     try 
@@ -165,9 +162,9 @@ let private updateProfileAndHandleEntities (profile: Profile) =
             | failure -> failure
         | failure -> failure
     with
-        | ex -> 
-            Log.Error("updateProfile() - Exception {0}", ex)
-            Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = ex.Message }
+    | ex -> 
+        Log.Error("updateProfile() - Exception {0}", ex)
+        Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = ex.Message }
 
 let updateProfile (pid: Guid) (profile: Profile) = 
     if pid = profile.Id then 
@@ -199,7 +196,6 @@ let rec applyPatchOperations (operations: PatchOperation list) (profile: Profile
         match newProfile with
         | Success profile -> applyPatchOperations tail profile
         | failure -> failure
-
     
 let patchProfile (pid: Guid) (operations: PatchOperation list) =     
     match getProfile pid with
