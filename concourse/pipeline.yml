@@ -1,8 +1,9 @@
 resource_types:
-  - name: docker-swarm-deploy 
+  - name: docker-swarm-deploy
     type: docker-image
     source:
       repository: bristechsrm/docker-swarm-deploy
+
 jobs:
 - name: build
   public: true
@@ -17,7 +18,7 @@ jobs:
   - put: image
     params:
       build: context
-  - put: swarm 
+  - put: swarm
 
 resources:
 - name: code
@@ -37,9 +38,9 @@ resources:
   type: docker-swarm-deploy
   source:
     serviceName: sessions
-    nodeName: sessions
+    executableName: Sessions
+    nodeName: {{sessionsNode}}
+    portNumber: 8080
     repository: bristechsrm/sessions
     swarmMasterIp: {{swarmMasterIp}}
-    overlay: overlay
-    accessKeyId: {{awsAccessKeyId}}
-    secretAccessKey: {{awsSecretAccessKey}}
+    network: bridge
