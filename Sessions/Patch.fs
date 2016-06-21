@@ -4,42 +4,37 @@ open System
 open System.Net
 open Models
 
-let isNullOrWhiteSpaceOption str = 
-    if String.IsNullOrWhiteSpace str then 
-        None 
-    else 
-        Some str
+let isNullOrWhiteSpaceResult (failureValue: 'Failure) (str: string) = 
+    if String.IsNullOrWhiteSpace str then
+        Failure failureValue
+    else    
+        Success str
 
 let parseOp op = 
-    op
-    |> isNullOrWhiteSpaceOption
-    |> Option.map (fun str -> str.ToLower())
+    op 
+    |> isNullOrWhiteSpaceResult ()
+    |> Result.map (fun str -> str.ToLower())
 
 let parsePath path = 
-    let p = 
-        path
-        |> isNullOrWhiteSpaceOption
-        |> Option.filter (fun str -> str.StartsWith "/")
-        |> Option.map (fun str -> (str.ToLower().Split [|'/'|]) |> Array.skip 1 )
-    match p with
-    | Some path -> Success path
-    | None -> Failure <| sprintf "'path' field: %s could not be correctly parsed" path
+    let failureMessage = sprintf "'path' field: %s could not be correctly parsed" path
+    path
+    |> isNullOrWhiteSpaceResult failureMessage
+    |> Result.filter (fun str -> str.StartsWith "/") failureMessage
+    |> Result.map (fun str -> (str.ToLower().Split [|'/'|]) |> Array.skip 1 )
 
-let validValue value = 
-    if String.IsNullOrWhiteSpace value then 
-        Failure <| sprintf "'value' field: %s was null, whitespace or missing" value
-    else 
-        Success value
+let parseValue value = 
+    let failureMessage = sprintf "'value' field: %s was null, whitespace or missing" value
+    isNullOrWhiteSpaceResult failureMessage value
 
 let createFailMessage fieldMessage (rawOp: RawPatchOperation) = 
     sprintf "%s. Operation was: %A" fieldMessage rawOp
 
 let parseOperation (rawOp: RawPatchOperation) =
     match parseOp rawOp.Op with 
-    | Some "replace" -> 
+    | Success "replace" -> 
         match parsePath rawOp.Path with
         | Success path -> 
-            match validValue rawOp.Value with
+            match parseValue rawOp.Value with
             | Success value -> Success <| Replace(path, value)
             | Failure message -> Failure message
         | Failure message -> Failure message
