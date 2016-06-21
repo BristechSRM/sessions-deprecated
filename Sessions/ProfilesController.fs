@@ -45,8 +45,8 @@ type ProfilesController() =
     member x.Patch(id: Guid, operations : RawPatchOperation list option) = 
         Log.Information("Received Patch request for profile with id: {id}", id)
         match Patch.parseOperations operations with 
-        | Success ops -> 
-            match patchProfile id ops with
+        | Success patchOperations -> 
+            match patchProfile id patchOperations with
             | Success () -> 
                 Log.Information("Success: Patch request for profile with id: {id} complete", id)
                 x.Request.CreateResponse(HttpStatusCode.OK)
