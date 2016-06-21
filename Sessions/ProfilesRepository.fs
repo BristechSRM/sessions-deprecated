@@ -69,10 +69,10 @@ let getHandle (handletype : string) (identifier : string) =
             HttpStatus = HttpStatusCode.NotFound
             Message = sprintf "A handle with type %s and identifier %s could not be found" handletype identifier }
     with
-    | ex ->
-        Log.Error("getHandle(handletype) - Exception: {0}", ex)
-        Failure { HttpStatus = HttpStatusCode.InternalServerError
-                  Message = ex.Message }
+        | ex ->
+            Log.Error("getHandle(handletype) - Exception: {0}", ex)
+            Failure { HttpStatus = HttpStatusCode.InternalServerError
+                      Message = ex.Message }
 
 let getHandles() = 
     try
@@ -82,10 +82,10 @@ let getHandles() =
         connection.Query<HandleEntity>("select profileId, type, identifier from handles order by type, identifier")
         |> Success
     with
-    | ex ->
-        Log.Error("getHandles() - Exception: {0}", ex)
-        Failure { HttpStatus = HttpStatusCode.InternalServerError
-                  Message = ex.Message }
+        | ex ->
+            Log.Error("getHandles() - Exception: {0}", ex)
+            Failure { HttpStatus = HttpStatusCode.InternalServerError
+                      Message = ex.Message }
 
 let private insertProfileEntity (connection : MySqlConnection) (profileEntity : ProfileEntity) = 
     let profileInsertCount = connection.Execute(@"insert profiles(id,forename,surname,rating,imageUrl) values (@Id,@Forename,@Surname,@Rating,@ImageUrl)", profileEntity)
@@ -111,12 +111,12 @@ let getProfile (profileId : Guid) =
             let profile = entityToModel profileEntity handleEntities
             Success profile
         else 
-            Failure { HttpStatus = HttpStatusCode.NotFound; Message = sprintf "Profile with id %A does not exist" profileId }
+            Failure { HttpStatus = HttpStatusCode.NotFound; Message = sprintf "Profile with id %A does not exist." profileId }
     with
-    | ex ->
-        Log.Error("getProfile(profileId) - Exception: {0}", ex)
-        Failure { HttpStatus = HttpStatusCode.InternalServerError
-                  Message = ex.Message }
+        | ex ->
+            Log.Error("getProfile(profileId) - Exception: {0}", ex)
+            Failure { HttpStatus = HttpStatusCode.InternalServerError
+                      Message = ex.Message }
 
 let addProfile (profile : Profile) = 
     try 
@@ -136,50 +136,44 @@ let addProfile (profile : Profile) =
             | Failure error -> Failure error
         | Failure error -> Failure error
     with
-    | ex ->
-        Log.Error("addProfile() - Exception: {0}", ex)
-        Failure { HttpStatus = HttpStatusCode.BadRequest; Message = ex.Message }
+        | ex ->
+            Log.Error("addProfile() - Exception: {0}", ex)
+            Failure { HttpStatus = HttpStatusCode.BadRequest; Message = ex.Message }
 
-let private updateProfileAndHandleEntities connection (transaction: MySqlTransaction) profileEntity handleEntities = 
-    match updateProfileEntity connection profileEntity with 
-    | Success () -> 
-        let storedHandles = connection.Query<HandleEntity>("select type,identifier,profileId from handles where profileId=@Id", dict [ "Id", box profileEntity.Id ]) |> Seq.toList
-        let newHandles = handleEntities |> Seq.filter (handleDoesNotExistIn storedHandles)
-        let handlesToDelete = storedHandles |> Seq.filter (handleDoesNotExistIn handleEntities)
+let private updateProfileAndHandleEntities (profile: Profile) = 
+    try 
+        let profileEntity = modelToEntity profile
+        let handleEntities = profile.Handles |> Seq.map (handleModelToEntity profileEntity.Id)
 
-        match insertHandleEntities connection newHandles with
+        use connection = getConnection()
+        connection.Open()
+        use transaction = connection.BeginTransaction()
+
+        match updateProfileEntity connection profileEntity with 
         | Success () -> 
-            match deleteHandleEntities connection handlesToDelete with
+            let storedHandles = connection.Query<HandleEntity>("select type,identifier,profileId from handles where profileId=@Id", dict [ "Id", box profileEntity.Id ]) |> Seq.toList
+            let newHandles = handleEntities |> Seq.filter (handleDoesNotExistIn storedHandles)
+            let handlesToDelete = storedHandles |> Seq.filter (handleDoesNotExistIn handleEntities)
+
+            match insertHandleEntities connection newHandles with
             | Success () -> 
-                transaction.Commit()
-                Success ()
+                match deleteHandleEntities connection handlesToDelete with
+                | Success () -> 
+                    transaction.Commit()
+                    Success ()
+                | failure -> failure
             | failure -> failure
         | failure -> failure
-    | failure -> failure
-
-let updateProfile (pid: Guid) (profile: Profile) = 
-    if pid = profile.Id then 
-        try 
-            match getProfile pid with
-            | Success _ ->
-                let profileEntity = modelToEntity profile
-                let handleEntities = profile.Handles |> Seq.map (handleModelToEntity profileEntity.Id)
-
-                use connection = getConnection()
-                connection.Open()
-                use transaction = connection.BeginTransaction()
-
-                updateProfileAndHandleEntities connection transaction profileEntity handleEntities
-
-            | Failure error -> 
-                match error.HttpStatus with
-                | HttpStatusCode.NotFound -> 
-                    Failure { HttpStatus = HttpStatusCode.NotFound; Message = sprintf "No update performed. Profile with id: %A does not exist. Put is update only." pid}        
-                | _ -> Failure error
-        with
+    with
         | ex -> 
             Log.Error("updateProfile() - Exception {0}", ex)
             Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = ex.Message }
+
+let updateProfile (pid: Guid) (profile: Profile) = 
+    if pid = profile.Id then 
+        match getProfile pid with
+        | Success _ -> updateProfileAndHandleEntities profile
+        | Failure error -> Failure {error with Message = error.Message + "No Update performed."}
     else 
         Failure { HttpStatus = HttpStatusCode.BadRequest; Message = "Invalid Data. specified profile Id in request url does not match Id of input profile." } 
 
@@ -197,38 +191,20 @@ let applyPatchOp (profile: Profile) (patchOp: PatchOperation) =
         | _ -> Failure { HttpStatus = HttpStatusCode.BadRequest; Message = sprintf "InvalidOperation. Patch is only accepted on the Rating field. Path %A is not accepted" path}  
     | _ -> Failure { HttpStatus = HttpStatusCode.BadRequest; Message = sprintf "InvalidOperation. Patch operation: %A is not accepted for Profiles" patchOp}
 
-let rec applyPatchOperations (profile: Profile) (operations: PatchOperation list) = 
+let rec applyPatchOperations (operations: PatchOperation list) (profile: Profile)  = 
     match operations with
     | [] -> Success profile
     | head :: tail -> 
         let newProfile = applyPatchOp profile head
         match newProfile with
-        | Success profile -> applyPatchOperations profile tail
+        | Success profile -> applyPatchOperations tail profile
         | failure -> failure
 
     
-let patchProfile (pid: Guid) (operations: PatchOperation list) = 
-    try 
-        match getProfile pid with
-        | Success profile -> 
-            match applyPatchOperations profile operations with 
-            | Success patchedProfile -> 
-                let profileEntity = modelToEntity patchedProfile
-                let handleEntities = patchedProfile.Handles |> Seq.map (handleModelToEntity profileEntity.Id)
-
-                use connection = getConnection()
-                connection.Open()
-                use transaction = connection.BeginTransaction()
-
-                updateProfileAndHandleEntities connection transaction profileEntity handleEntities
-            | Failure error -> Failure error
-
-        | Failure error -> 
-            match error.HttpStatus with
-            | HttpStatusCode.NotFound -> 
-                Failure { HttpStatus = HttpStatusCode.NotFound; Message = sprintf "No patch performed. Profile with id: %A does not exist." pid}        
-            | _ -> Failure error
-    with
-    | ex -> 
-        Log.Error("updateProfile() - Exception {0}", ex)
-        Failure { HttpStatus = HttpStatusCode.InternalServerError; Message = ex.Message }
+let patchProfile (pid: Guid) (operations: PatchOperation list) =     
+    match getProfile pid with
+    | Success profile -> 
+        match applyPatchOperations operations profile with 
+        | Success patchedProfile -> updateProfileAndHandleEntities patchedProfile
+        | Failure error -> Failure error
+    | Failure error -> Failure {error with Message = error.Message + "No Patch performed."}
