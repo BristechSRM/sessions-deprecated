@@ -3,12 +3,17 @@ module Result
 
 open Models
 
-let map mapFunc input = 
+let map func input = 
     match input with 
     | Failure failure -> Failure failure
-    | Success value -> Success (mapFunc value)
+    | Success value -> Success (func value)
 
-let filter filterFunc failureValue input = 
+let bind func input : Result<'b,'c>= 
     match input with
     | Failure failure -> Failure failure
-    | Success value -> if filterFunc value then Success value else Failure failureValue
+    | Success value -> func value
+
+let filter func failureValue input = 
+    match input with
+    | Failure failure -> Failure failure
+    | Success value -> if func value then Success value else Failure failureValue
