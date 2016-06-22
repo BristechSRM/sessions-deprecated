@@ -10,7 +10,7 @@ type Result<'Success,'Failure> =
 
 type ServerError = 
     { HttpStatus : HttpStatusCode
-      Message : string }
+      Message : string }  
 
 type Rating = 
     | Zero = 0
