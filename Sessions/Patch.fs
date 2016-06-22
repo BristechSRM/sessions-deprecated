@@ -43,15 +43,15 @@ let parseValue value =
 let createFailMessage fieldMessage (rawOp: RawPatchOperation) = 
     sprintf "%s. Operation was: %A" fieldMessage rawOp
 
+let parseReplaceOperation (rawOp: RawPatchOperation) = 
+    parsePath rawOp.Path
+    |> Result.bind(fun path -> 
+        parseValue rawOp.Value
+        |> Result.map(fun value -> Replace(path,value)))
+
 let parseOperation (rawOp: RawPatchOperation) =
     match parseOp rawOp.Op with 
-    | Success "replace" -> 
-        match parsePath rawOp.Path with
-        | Success path -> 
-            match parseValue rawOp.Value with
-            | Success value -> Success <| Replace(path, value)
-            | Failure message -> Failure message
-        | Failure message -> Failure message
+    | Success "replace" -> parseReplaceOperation rawOp
     | _ -> Failure <| sprintf "'op' field: %s did not match an accepted patch operation" rawOp.Op
 
 let parseOperations (rawOps: RawPatchOperation list option) = 
