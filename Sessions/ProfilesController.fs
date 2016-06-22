@@ -7,6 +7,7 @@ open System.Web.Http
 open Serilog
 open Models
 open ProfilesRepository
+open Patch
 
 type ProfilesController() = 
     inherit ApiController()

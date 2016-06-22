@@ -9,6 +9,7 @@ open System.Data.SqlClient
 open MySql.Data.MySqlClient
 open Models
 open Entities
+open Patch
 open Serilog
 
 let connectionString = ConfigurationManager.ConnectionStrings.Item("DefaultConnection").ConnectionString

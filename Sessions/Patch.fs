@@ -4,6 +4,20 @@ open System
 open System.Net
 open Models
 
+type RawPatchOperation = 
+    { Op : string
+      Path : string
+      Value : string
+      From : string }
+
+type PatchOperation = 
+    | Add of path: string [] * value: string
+    | Remove of path: string []
+    | Replace of path: string [] * value: string
+    | Copy of from: string [] * path: string []
+    | Move of from: string [] * path: string []
+    | Test of path: string [] * value: string
+
 let isNullOrWhiteSpaceResult (failureValue: 'Failure) (str: string) = 
     if String.IsNullOrWhiteSpace str then
         Failure failureValue
